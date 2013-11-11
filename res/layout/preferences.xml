@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory android:title="@string/proxi_radius_desc" >
+
+        <ListPreference
+            android:defaultValue="2"
+            android:entries="@array/proxRadius"
+            android:entryValues="@array/proxRadiusVals"
+            android:key="proxradius"
+            android:summary="@string/proximity_radius_desc"
+            android:title="@string/set_proxi_Title" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/alerts_desc_cat" >
+
+        <ListPreference
+            android:defaultValue="200,200"
+            android:entries="@array/alert_vibration_type"
+            android:entryValues="@array/alert_vibration_values"
+            android:key="vibration_value"
+            android:summary="@string/vibration_variants"
+            android:title="@string/set_vibration_type" >
+        </ListPreference>
+
+        <ListPreference
+            android:defaultValue="2"
+            android:entries="@array/alert_vibration_repeat"
+            android:entryValues="@array/alert_vibration_repeat_values"
+            android:key="vibration_repeat"
+            android:summary="@string/vibration_repeatintg"
+            android:title="@string/set_vibration_repeat" >
+        </ListPreference>
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/alert_sound_cat" >
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="sound_pref_checkbox"
+            android:summary="@string/sound_pref_desc"
+            android:title="@string/sound_pref" />
+
+        <Preference
+            android:key="chose_sound"
+            android:summary="@string/sound_choice_summary"
+            android:title="@string/sound_choice_title" >
+        </Preference>
+    </PreferenceCategory>
+
+</PreferenceScreen>

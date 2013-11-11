@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <string-array name="minTimeIncs">
+        <item name="0">0</item>
+        <item name="1000">Every 1 sekunda</item>
+        <item name="2000">Every 2 sekund</item>
+        <item name="5000">Every 5 sekund</item>
+        <item name="10000">Every 10 sekund</item>
+        <item name="30000">Every 30 sekund</item>
+        <item name="60000">Every 1 minuta</item>
+        <item name="300000">Every 5 minut</item>
+        <item name="1800000">Every 30 minut</item>
+    </string-array>
+    <string-array name="minTimeVals">
+        <item name="0">0</item>
+        <item name="1000">1000</item>
+        <item name="2000">2000</item>
+        <item name="5000">5000</item>
+        <item name="10000">10000</item>
+        <item name="30000">30000</item>
+        <item name="60000">60000</item>
+        <item name="300000">300000</item>
+        <item name="1800000">1800000</item>
+    </string-array>
+    <string-array name="minDistance">
+        <item name="1">1 metrów</item>
+        <item name="2">2 metrów</item>
+        <item name="3">3 metrów</item>
+        <item name="5">5 metrów</item>
+        <item name="10">10 metrów</item>
+        <item name="25">25 metrów</item>
+        <item name="50">50 metrów</item>
+        <item name="100">100 metrów</item>
+        <item name="250">250 metrów</item>
+        <item name="500">500 metrów</item>
+        <item name="1000">1000 metrów</item>
+    </string-array>
+    <string-array name="minDistanceVals">
+        <item name="1">1</item>
+        <item name="2">2</item>
+        <item name="3">3</item>
+        <item name="5">5</item>
+        <item name="10">10</item>
+        <item name="25">25</item>
+        <item name="50">50</item>
+        <item name="100">100</item>
+        <item name="250">250</item>
+        <item name="500">500</item>
+        <item name="1000">1000</item>
+    </string-array>
+    <string-array name="proxRadius">
+        <item name="1">1 metrów</item>
+        <item name="2">2 metrów</item>
+        <item name="3">3 metrów</item>
+        <item name="5">5 metrów</item>
+        <item name="10">10 metrów</item>
+        <item name="25">25 metrów</item>
+        <item name="50">50 metrów</item>
+        <item name="100">100 metrów</item>
+        <item name="250">250 metrów</item>
+        <item name="500">500 metrów</item>
+        <item name="1000">1000 metrów</item>
+        <item name="1100">1100 metrów</item>
+        <item name="1200">1200 metrów</item>
+    </string-array>
+    <string-array name="proxRadiusVals">
+        <item name="1">1</item>
+        <item name="2">2</item>
+        <item name="3">3</item>
+        <item name="5">5</item>
+        <item name="10">10</item>
+        <item name="25">25</item>
+        <item name="50">50</item>
+        <item name="100">100</item>
+        <item name="250">250</item>
+        <item name="500">500</item>
+        <item name="1000">1000</item>
+        <item name="1100">1100</item>
+        <item name="1200">1200</item>
+    </string-array>
+    <string-array name="alert_vibration_type">
+        <item name="smooth">delikatne</item>
+        <item name="medium">średnie</item>
+        <item name="silne">silne</item>
+    </string-array>
+    <string-array name="alert_vibration_values">
+        <item name="smooth">200,200</item>
+        <item name="medium">400,400</item>
+        <item name="silne">500,500 </item>
+    </string-array>
+    <string-array name="alert_vibration_repeat">
+        <item name="2">2</item>
+        <item name="5">5</item>
+        <item name="7">7</item>
+        <item name="10">10</item>
+    </string-array>
+    <string-array name="alert_vibration_repeat_values">
+        <item name="2">2</item>
+        <item name="5">5</item>
+        <item name="7">7</item>
+        <item name="10">10</item>
+    </string-array>
+
+</resources>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/mn_notDoneSort"
+        android:title="@string/mn_notDoneSort"/>
+    <item
+        android:id="@+id/mn_doneSort"
+        android:title="@string/mn_doneSort"/>
+    <item
+        android:id="@+id/mn_actualTasks"
+        android:title="@string/mn_actualTasks"/>
+    <item
+        android:id="@+id/mn_notActualTasks"
+        android:title="@string/mn_notActualTasks"/>
+    <item
+        android:id="@+id/mn_allTasks"
+        android:title="@string/mn_allTasks"/>
+    <item
+        android:id="@+id/mn_showAllOnMap"
+        android:title="@string/mn_showAllOnMap">
+    </item>
+
+</menu>

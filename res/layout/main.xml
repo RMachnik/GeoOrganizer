@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <Button
+        android:id="@+id/btn_createNewTask"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="39dp"
+        android:text="@string/addTask" />
+
+    <Button
+        android:id="@+id/btn_showTasksList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/btn_createNewTask"
+        android:layout_alignRight="@+id/btn_createNewTask"
+        android:layout_below="@+id/btn_createNewTask"
+        android:text="@string/showTasksList" />
+
+    <Button
+        android:id="@+id/btn_main_preferences"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/btn_showTasksList"
+        android:layout_alignRight="@+id/btn_showTasksList"
+        android:layout_below="@+id/btn_showTasksList"
+        android:text="Ustawienia" />
+
+    <Button
+        android:id="@+id/btn_main_help"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/btn_main_preferences"
+        android:layout_alignRight="@+id/btn_main_preferences"
+        android:layout_below="@+id/btn_main_preferences"
+        android:text="@string/mn_help" />
+
+    <Button
+        android:id="@+id/btn_main_exit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/btn_main_help"
+        android:layout_alignRight="@+id/btn_main_help"
+        android:layout_below="@+id/btn_main_help"
+        android:text="@string/mn_exit" />
+
+</RelativeLayout>

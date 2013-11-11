@@ -1,0 +1,58 @@
+<resources>
+    <string name="app_name">GeoOrganizer</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_main">GeoOrganizer</string>
+    <string name="title_new_task">Dodawanie nowego zadania</string>
+    <string name="task_note">Tytuł</string>
+    <string name="place_address">Adres/miejsce</string>
+    <string name="task_dedline">Data wazności</string>
+    <string name="find_place">Znajdz na mapie</string>
+    <string name="priority">Wybierz priorytet</string>
+    <string name="priority_high">Wysoki</string>
+    <string name="priority_normal">Normalny</string>
+    <string name="priority_low">Niski</string>
+    <string name="addTask">Dodaj zadanie</string>
+    <string name="welcome_text">Witaj w aplikacji</string>
+    <string name="confirm_localisation">Zatwierdź</string>
+    <string name="btn_search">Szukaj</string>
+    <string name="showTasksList">Lista zadań</string>
+    <string name="mn_notDoneSort">Niewykonane</string>
+    <string name="mn_doneSort">Wykonane</string>
+    <string name="mn_actualTasks">Aktualne</string>
+    <string name="mn_notActualTasks">Nieaktualne</string>
+    <string name="edit_task">Zapisz</string>
+    <string name="title_listActiv">Lista zadań</string>
+    <string name="back_toMenu">Powrót</string>
+    <string name="time">Czas</string>
+    <string name="mn_help">Pomoc</string>
+    <string name="mn_exit">Wyjście</string>
+    <string name="minimum_frequency_desc">Jak często uaktualniac lokalizację</string>
+    <string name="minimum_move_desc">Minimalna wartość ruchu potrzebna do uaktualnienia lokalizacji</string>
+    <string name="set_min_freq">Ustaw Minimalną Częstotliwość</string>
+    <string name="set_min_dist">Ustaw Minimalny Dystans</string>
+    <string name="loc_update_freq">USTAWIENIA AKTUALIZACYJNE LOKALIZACJI</string>
+    <string name="proxi_radius_desc">USTAWIENIA ZASIĘGU DLA POWIADOMIEŃ</string>
+    <string name="proximity_radius_desc">Promień zasiegu powiadamiania o wydarzeniu</string>
+    <string name="set_proxi_Title">Ustaw Zasięg Powiadomień</string>
+    <string name="help_txt">Aplikacja pozwalająca na dodawanie zadań przyporządkowanych do miejsca ich wykonania. Zadania te posiadają również czas ważności do którego czasu przypomnienie będzie aktywne.
+        funkcja przypominająca będzie uruchamiała się w pobliżu miejsca dodania. Zakres przypomnień tzn promień obszaru objętego przypomnieniem można ustawić w ustawieniach aplikacji.
+        Forma przypomnienia również jest ustawiana w aplikacji. Uwagi odnośnie działania apliacki proszę kierować na email: </string>
+    <string name="tv_email">rafik991@gmail.com</string>
+    <string name="alerts_desc_cat">USTAWIENIA WIBRACJI</string>
+    <string name="vibration_variants">Metody powiadamiania wibracyjnego</string>
+    <string name="set_vibration_type">Ustaw rodzaj wibracji</string>
+    <string name="set_vibration_repeat">Ustaw powtarzanie wibracji</string>
+    <string name="vibration_repeatintg">Ilość powtórzeń alarmu wibracyjnego</string>
+    <string name="mn_showAllOnMap">Pokaż zadania na mapie</string>
+    <string name="alert_sound_cat">Ustaw dźwięk powiadomień</string>
+    <string name="sound_pref">Ustawienia dźwięku</string>
+    <string name="sound_pref_desc">Powiadomienie dźwiękowe</string>
+    <string name="ok">OK</string>
+    <string name="status_change">Zmień status</string>
+    <string name="status">Status opis obrazka</string>
+    <string name="sound_choice_title">Wybierz dźwiek powiadomienia</string>
+    <string name="sound_choice_summary">Lista dostępnych dźwięków powiadomienia</string>
+    <string name="show_on_map">Pokaż na mapie</string>
+    <string name="mn_allTasks">Wszystkie zadania</string>
+
+</resources>

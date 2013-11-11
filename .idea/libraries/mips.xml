@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="mips">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/libs/mips" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
