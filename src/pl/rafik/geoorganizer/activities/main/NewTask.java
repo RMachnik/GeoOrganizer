@@ -3,6 +3,7 @@ package pl.rafik.geoorganizer.activities.main;
 import java.util.Calendar;
 
 import pl.rafik.geoorganizer.R;
+import pl.rafik.geoorganizer.activities.map.MapPane;
 import pl.rafik.geoorganizer.activities.map.ShowOnMap;
 import pl.rafik.geoorganizer.model.dto.GeoLocalisation;
 import pl.rafik.geoorganizer.model.dto.TaskDTO;
@@ -132,7 +133,7 @@ public class NewTask extends Activity {
 						public void gotLocation(Location location) {
 							if (location != null) {
 								Intent mapIntent = new Intent(NewTask.this,
-										ShowOnMap.class);
+										MapPane.class);
 								mapIntent.putExtra("Latitude",
 										location.getLatitude());
 								mapIntent.putExtra("Longitude",
@@ -340,7 +341,7 @@ public class NewTask extends Activity {
 					addr += a.getAddressLine(a.getMaxAddressLineIndex() - 1);
 					if (!addr.equals("")) {
 						Intent mapView = new Intent(NewTask.this,
-								ShowOnMap.class);
+								MapPane.class);
 						mapView.putExtra("Latitude", address.getLatitude());
 						mapView.putExtra("Longitude", address.getLongitude());
 						// aktywnosc uruchamiana w trybie request for result, w
