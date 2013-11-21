@@ -1,7 +1,7 @@
 <component name="libraryTable">
   <library name="armeabi">
     <CLASSES>
-      <root url="file://$PROJECT_DIR$/libs/armeabi" />
+      <root url="file://$PROJECT_DIR$/libs/dropbox-android-sync-sdk-2.0.3/libs/armeabi" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

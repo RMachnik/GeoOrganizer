@@ -2,6 +2,9 @@ package pl.rafik.geoorganizer.activities.map;
 
 import java.util.List;
 
+import android.support.v4.app.FragmentActivity;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
 import pl.rafik.geoorganizer.R;
 import pl.rafik.geoorganizer.services.impl.LocalisationService;
 import android.content.Intent;
@@ -32,10 +35,10 @@ import com.google.android.maps.OverlayItem;
  * @author Rafal
  * 
  */
-public class ShowOnMap extends MapActivity {
+public class ShowOnMap extends FragmentActivity {
 
 	private GeoPoint point;
-	private MapView mv;
+	private GoogleMap mv;
 	private Button zatwierdz;
 	private EditText searchEdt;
 	private Button change;
@@ -48,6 +51,7 @@ public class ShowOnMap extends MapActivity {
 	private Drawable icon;
 	private CustomItemizedOverlay itemizedOverlay;
 	private List<Overlay> listOverlays;
+    private GoogleMap googleMap;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -59,7 +63,8 @@ public class ShowOnMap extends MapActivity {
 
 		service = new LocalisationService(handler, this);
 
-		mv = (MapView) findViewById(R.id.mapView);
+		mv =((MapFragment) getFragmentManager().findFragmentById(
+                R.id.mapView)).getMap();
 		latitude = (int) (bundle.getDouble("Latitude") * 1000000);
 		longitude = (int) (bundle.getDouble("Longitude") * 1000000);
 		Log.d("Latitude", String.valueOf(latitude));
@@ -133,11 +138,6 @@ public class ShowOnMap extends MapActivity {
 		return true;
 	}
 
-	@Override
-	protected boolean isRouteDisplayed() {
-		// TODO Auto-generated method stub
-		return false;
-	}
 
 	/**
 	 * Klasa oboslugujaca serwis ktory po znalezienio odpowiedniej lokalizacji
@@ -214,8 +214,8 @@ public class ShowOnMap extends MapActivity {
 		}
 	};
 
-	public void setMapCenter(MapView mv, GeoPoint point) {
-		MapController mc = mv.getController();
+	public void setMapCenter(GoogleMap mv, GeoPoint point) {
+
 		OverlayItem item = new OverlayItem(point, "Nazwa", addr);
 
 		listOverlays.clear();
@@ -227,5 +227,24 @@ public class ShowOnMap extends MapActivity {
 		mc.setZoom(mv.getMaxZoomLevel() - 5);
 		mv.invalidate();
 	}
+    private void initilizeMap() {
+        if (googleMap == null) {
+            googleMap = ((MapFragment) getFragmentManager().findFragmentById(
+                    R.id.map)).getMap();
+
+            // check if map is created successfully or not
+            if (googleMap == null) {
+                Toast.makeText(getApplicationContext(),
+                        "Sorry! unable to create maps", Toast.LENGTH_SHORT)
+                        .show();
+            }
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        initilizeMap();
+    }
 
 }

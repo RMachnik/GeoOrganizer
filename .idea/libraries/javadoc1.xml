@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="javadoc1">
+    <CLASSES />
+    <JAVADOC>
+      <root url="file://$PROJECT_DIR$/libs/dropbox-android-sync-sdk-2.0.3/javadoc" />
+    </JAVADOC>
+    <SOURCES />
+  </library>
+</component>

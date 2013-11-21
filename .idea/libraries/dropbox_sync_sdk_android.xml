@@ -1,7 +1,7 @@
 <component name="libraryTable">
   <library name="dropbox-sync-sdk-android">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/libs/dropbox-sync-sdk-android.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/dropbox-android-sync-sdk-2.0.3/libs/dropbox-sync-sdk-android.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
