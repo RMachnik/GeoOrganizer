@@ -27,9 +27,9 @@
 
         <activity
                 android:name=".activities.main.Welcome"
-                android:label="@string/title_activity_main">
+                android:label="@string/title_activity_main"
 
-            <!-- android:theme="@android:style/Theme.NoTitleBar" -->
+             android:theme="@android:style/Theme.NoTitleBar"  >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 

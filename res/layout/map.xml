@@ -36,4 +36,5 @@
             android:layout_alignParentRight="true"
             android:text="@string/confirm_localisation"/>
 
+
 </RelativeLayout>

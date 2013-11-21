@@ -2,6 +2,7 @@ package pl.rafik.geoorganizer.dao;
 
 import java.util.List;
 
+import com.dropbox.sync.android.DbxException;
 import pl.rafik.geoorganizer.model.dto.GeoLocalisation;
 import pl.rafik.geoorganizer.model.entity.TaskEntity;
 
@@ -13,14 +14,14 @@ public interface ITaskDAO {
 	 * @param task
 	 * @return
 	 */
-	public Long addTask(TaskEntity task);
+	public Long addTask(TaskEntity task) throws DbxException;
 
 	/**
 	 * Metoda zwraca wszystkie taski z bazy.
 	 * 
 	 * @return
 	 */
-	public List<TaskEntity> getAllTasks();
+	public List<TaskEntity> getAllTasks() throws DbxException;
 
 	/**
 	 * Metoda zwraca task o podanym identyfikatorze.
@@ -28,7 +29,7 @@ public interface ITaskDAO {
 	 * @param id
 	 * @return
 	 */
-	public TaskEntity getTask(Long id);
+	public TaskEntity getTask(Long id) throws DbxException;
 
 	/**
 	 * Metoda pobiera liste taskow zwiazanych z dana lokalizacja.

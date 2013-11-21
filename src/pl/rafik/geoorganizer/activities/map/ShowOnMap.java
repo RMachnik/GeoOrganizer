@@ -70,7 +70,7 @@ public class ShowOnMap extends FragmentActivity {
 		Log.d("Latitude", String.valueOf(latitude));
 		Log.d("Longitude", String.valueOf(longitude));
 		point = new GeoPoint(latitude, longitude);
-		listOverlays = mv.getOverlays();
+		//listOverlays = mv.getOverlays();
 		icon = this.getResources().getDrawable(R.drawable.ic_delete);
 		itemizedOverlay = new CustomItemizedOverlay(icon, this, handler);
 		service.getAdress(bundle.getDouble("Latitude"),
@@ -219,13 +219,13 @@ public class ShowOnMap extends FragmentActivity {
 		OverlayItem item = new OverlayItem(point, "Nazwa", addr);
 
 		listOverlays.clear();
-		mv.invalidate();
+	//	mv.invalidate();
 		itemizedOverlay.clear();
 		itemizedOverlay.addOverlay(item);
 		listOverlays.add(itemizedOverlay);
-		mc.animateTo(point);
-		mc.setZoom(mv.getMaxZoomLevel() - 5);
-		mv.invalidate();
+	//	mc.animateTo(point);
+	//	mc.setZoom(mv.getMaxZoomLevel() - 5);
+	//	mv.invalidate();
 	}
     private void initilizeMap() {
         if (googleMap == null) {

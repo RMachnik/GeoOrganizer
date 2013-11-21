@@ -39,7 +39,7 @@ public class MapPane extends Activity {
     private void initilizeMap() {
         if (googleMap == null) {
             googleMap = ((MapFragment) getFragmentManager().findFragmentById(
-                    R.id.mapfragment)).getMap();
+                    R.id.map)).getMap();
 
             // check if map is created successfully or not
             if (googleMap == null) {
