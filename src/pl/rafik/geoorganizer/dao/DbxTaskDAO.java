@@ -65,56 +65,58 @@ public class DbxTaskDAO implements ITaskDAO {
 
     @Override
     public List<TaskEntity> getTasks(GeoLocalisation localisation) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null;
     }
 
     @Override
     public List<TaskEntity> getFutureTasks() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null;
     }
 
     @Override
     public List<TaskEntity> getPastTasks() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null;
     }
 
     @Override
     public List<TaskEntity> getNotDoneTasks() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null;
     }
 
     @Override
     public List<TaskEntity> getDoneTasks() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null;
     }
 
     @Override
     public int updateTask(TaskEntity ent) {
-        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+        return 0;
     }
 
     @Override
     public int deleteTask(Long id) {
-        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+        return 0;
     }
 
     @Override
     public TaskEntity getTask(GeoLocalisation localisation) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null;
     }
 
     @Override
     public List<TaskEntity> getActualTasks() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null;
     }
 
     @Override
     public int makeDone(Long id) {
-        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+        return 0;
     }
 
     @Override
     public int makeNotDone(Long id) {
-        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+        return 0;
     }
+
+
 }
