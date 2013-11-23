@@ -20,7 +20,7 @@ public interface ITaskService {
 	 * @param dto
 	 * @return
 	 */
-	public Long addNewTask(TaskDTO dto) throws DbxException;
+	public String addNewTask(TaskDTO dto) throws DbxException;
 
 	/**
 	 * Metoda zwraca wszystkie taski z bazy.
@@ -35,7 +35,7 @@ public interface ITaskService {
 	 * @param id
 	 * @return
 	 */
-	public TaskDTO getTask(Long id) throws DbxException;
+	public TaskDTO getTask(String id) throws DbxException;
 
 	/**
 	 * Metoda pobiera task zwiazany z danym punktem lokalizacyjnym.
@@ -43,7 +43,7 @@ public interface ITaskService {
 	 * @param point
 	 * @return
 	 */
-	public List<TaskDTO> getTasks(GeoLocalisation point);
+	public List<TaskDTO> getTasks(GeoLocalisation point) throws DbxException;
 
 	/**
 	 * Metoda pobierajaca taski ktore nalezy wykonac i ich dedline jest czasem
@@ -88,7 +88,7 @@ public interface ITaskService {
 	 * @param id
 	 * @return zwraca liczbe usunietych wierszy
 	 */
-	public int deleteTask(Long id) throws DbxException;
+	public int deleteTask(String id) throws DbxException;
 
 	/**
 	 * Metoda pobiera task zgodny z lokalizacja.
@@ -103,7 +103,7 @@ public interface ITaskService {
 	 * 
 	 * @return
 	 */
-	public List<TaskDTO> getActualTasks();
+	public List<TaskDTO> getActualTasks() throws DbxException;
 
 	/**
 	 * Zmienia status zadania na wykonany.
@@ -111,7 +111,7 @@ public interface ITaskService {
 	 * @param id
 	 * @return
 	 */
-	public int makeDone(Long id) throws DbxException;
+	public int makeDone(String id) throws DbxException;
 
 	/**
 	 * Zmienia status zdania na niewykonane.
@@ -119,5 +119,5 @@ public interface ITaskService {
 	 * @param id
 	 * @return
 	 */
-	public int makeNotDone(Long id) throws DbxException;
+	public int makeNotDone(String id) throws DbxException;
 }

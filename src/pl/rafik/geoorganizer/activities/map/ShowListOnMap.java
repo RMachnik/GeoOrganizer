@@ -40,14 +40,14 @@ public class ShowListOnMap extends FragmentActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.map_list_items);
-        taskService = new TaskService(this);
+        taskService = new TaskService(getApplicationContext());
         tasks = new ArrayList<TaskDTO>();
         icon = this.getResources().getDrawable(R.drawable.ic_delete);
         itemizedOverlay = new CustomItemizedOverlayNT(icon, this);
         Bundle bundle = getIntent().getExtras();
         mv = ((MapFragment) getFragmentManager().findFragmentById(
                 R.id.mapView)).getMap();
-        long[] ids = bundle.getLongArray("IDS");
+        String[] ids = bundle.getStringArray("IDS");
         points = new GeoPoint[ids.length];
     /*	listOverlays = mv.getOverlays();*/
         for (int i = 0; i < ids.length; i++) {

@@ -1,6 +1,8 @@
 package pl.rafik.geoorganizer.dao;
 
+import android.content.Context;
 import com.dropbox.sync.android.*;
+import pl.rafik.geoorganizer.dbx.DbxStart;
 import pl.rafik.geoorganizer.model.dto.GeoLocalisation;
 import pl.rafik.geoorganizer.model.entity.TaskEntity;
 
@@ -16,9 +18,12 @@ import static pl.rafik.geoorganizer.model.entity.TaskOpenHelper.*;
 public class DbxTaskDAO implements ITaskDAO {
     private DbxDatastore mDatastore;
     private DbxTable mTable;
+    private String APP_KEY;
+    private String APP_SECRET;
+    private DbxAccountManager dbxAccountManager;
 
-    public DbxTaskDAO(DbxDatastore datastore) {
-        this.mDatastore = datastore;
+    public DbxTaskDAO(Context context) {
+        initialiseDbx(context);
         mTable = mDatastore.getTable(TABLE_NAME);
     }
 
@@ -27,7 +32,7 @@ public class DbxTaskDAO implements ITaskDAO {
         return taskFields;
     }
 
-    private TaskEntity convertDbxFieldsToTaskEntity(DbxFields dbxFields) {
+    private TaskEntity convertDbxFieldsToTaskEntity(DbxRecord dbxFields) {
         TaskEntity taskEntity = new TaskEntity();
         taskEntity.setData(dbxFields.getString(TASK_DATE));
         taskEntity.setLatitude(dbxFields.getString(TASK_LATITUDE));
@@ -36,36 +41,44 @@ public class DbxTaskDAO implements ITaskDAO {
         taskEntity.setNote(dbxFields.getString(TASK_NOTE));
         taskEntity.setStatus(dbxFields.getString(TASK_STATUS));
         taskEntity.setPriority(dbxFields.getString(TASK_PRIORITY));
+        taskEntity.setId(dbxFields.getId());
         return taskEntity;
     }
 
     @Override
-    public Long addTask(TaskEntity task) throws DbxException {
+    public String addTask(TaskEntity task) throws DbxException {
         DbxFields taskFields = convertTaskToDbxFields(task);
         DbxRecord dbxRecord = mTable.insert(taskFields);
         mDatastore.sync();
-        return Long.valueOf(dbxRecord.getId());
+        return dbxRecord.getId();
     }
 
     @Override
     public List<TaskEntity> getAllTasks() throws DbxException {
         List<TaskEntity> taskEntityList = new ArrayList<>();
-
-        for (DbxFields field : mTable.query()) {
+        for (DbxRecord field : mTable.query().asList()) {
             TaskEntity taskEntity = convertDbxFieldsToTaskEntity(field);
             taskEntityList.add(taskEntity);
         }
+        mDatastore.sync();
         return taskEntityList;
     }
 
     @Override
-    public TaskEntity getTask(Long id) throws DbxException {
-        return convertDbxFieldsToTaskEntity(mTable.get(String.valueOf(id)));
+    public TaskEntity getTask(String id) throws DbxException {
+        return convertDbxFieldsToTaskEntity(mTable.get(id));
     }
 
     @Override
-    public List<TaskEntity> getTasks(GeoLocalisation localisation) {
-        return null;
+    public List<TaskEntity> getTasks(GeoLocalisation localisation) throws DbxException {
+        List<TaskEntity> taskEntityList = new ArrayList<>();
+        DbxFields queryParams = new DbxFields().set(TASK_STATUS, "NOT");
+        for (DbxRecord field : mTable.query(queryParams).asList()) {
+            TaskEntity taskEntity = convertDbxFieldsToTaskEntity(field);
+            taskEntityList.add(taskEntity);
+        }
+        mDatastore.sync();
+        return taskEntityList;
     }
 
     @Override
@@ -94,7 +107,7 @@ public class DbxTaskDAO implements ITaskDAO {
     }
 
     @Override
-    public int deleteTask(Long id) {
+    public int deleteTask(String id) {
         return 0;
     }
 
@@ -104,19 +117,39 @@ public class DbxTaskDAO implements ITaskDAO {
     }
 
     @Override
-    public List<TaskEntity> getActualTasks() {
-        return null;
+    public List<TaskEntity> getActualTasks() throws DbxException {
+        List<TaskEntity> taskEntityList = new ArrayList<>();
+        DbxFields queryParams = new DbxFields().set(TASK_STATUS, "NOT");
+        for (DbxRecord field : mTable.query(queryParams).asList()) {
+            TaskEntity taskEntity = convertDbxFieldsToTaskEntity(field);
+            taskEntityList.add(taskEntity);
+        }
+        mDatastore.sync();
+        return taskEntityList;
     }
 
     @Override
-    public int makeDone(Long id) {
+    public int makeDone(String id) {
         return 0;
     }
 
     @Override
-    public int makeNotDone(Long id) {
+    public int makeNotDone(String id) {
         return 0;
     }
 
-
+    private void initialiseDbx(Context context) {
+        if (null == mDatastore) {
+            try {
+                if (!DbxStart.dbxDatastore.isOpen())
+                    mDatastore = DbxDatastore.openDefault(DbxStart.dbxAccountManager.getLinkedAccount());
+                else {
+                    mDatastore = DbxStart.dbxDatastore;
+                }
+                mDatastore.sync();
+            } catch (DbxException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

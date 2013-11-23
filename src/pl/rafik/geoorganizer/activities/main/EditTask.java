@@ -72,7 +72,7 @@ public class EditTask extends Activity {
 		taskService = new TaskService(EditTask.this);
 		fragmentManager = this.getFragmentManager();
 		Bundle bundle = getIntent().getExtras();
-		Long id = bundle.getLong("ID");
+		String id = bundle.getString("ID");
         try {
             dto = taskService.getTask(id);
         } catch (DbxException e) {

@@ -46,8 +46,13 @@ public class TaskArrayAdapter extends BaseAdapter {
 		return taskList.get(pos);
 	}
 
-	@Override
-	public long getItemId(int pos) {
+    @Override
+    public long getItemId(int position) {
+        return 0;
+    }
+
+
+    public String getItemMyId(int pos) {
 		return taskList.get(pos).getId();
 	}
 

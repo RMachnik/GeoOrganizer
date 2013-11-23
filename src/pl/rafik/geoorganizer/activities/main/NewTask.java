@@ -221,8 +221,8 @@ public class NewTask extends Activity {
             int selected = radioGroup.getCheckedRadioButtonId();
             RadioButton button = (RadioButton) findViewById(selected);
             taskDTO.setPriority(button.getText().toString());
-            taskDTO.setId(taskService.addNewTask(taskDTO));
-            if (taskDTO.getId() >= 0) {
+            taskDTO.setId(String.valueOf(taskService.addNewTask(taskDTO)));
+            if (!taskDTO.getId().equals("0")) {
                 // wystartowanie nowej aktywnosci
                 if (proximityService.addProximityAlert(taskDTO)) {
                     Toast.makeText(NewTask.this, "Dodano zadanie!",

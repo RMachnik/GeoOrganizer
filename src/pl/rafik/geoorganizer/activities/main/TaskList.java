@@ -17,7 +17,8 @@ import pl.rafik.geoorganizer.activities.list.TaskArrayAdapter;
 import pl.rafik.geoorganizer.activities.map.ShowListOnMap;
 import pl.rafik.geoorganizer.model.dto.EmailBuilder;
 import pl.rafik.geoorganizer.model.dto.TaskDTO;
-import pl.rafik.geoorganizer.services.*;
+import pl.rafik.geoorganizer.services.IEmailService;
+import pl.rafik.geoorganizer.services.IProximityAlertService;
 import pl.rafik.geoorganizer.services.impl.EmailService;
 import pl.rafik.geoorganizer.services.impl.ProximityAlertService;
 import pl.rafik.geoorganizer.services.impl.TaskService;
@@ -47,8 +48,13 @@ public class TaskList extends ListActivity {
         super.onCreate(savedInstanceState);
         taskService = new TaskService(TaskList.this);
         proximityService = new ProximityAlertService(this);
-        adapter = new TaskArrayAdapter(TaskList.this,
-                taskService.getActualTasks());
+        try {
+            adapter = new TaskArrayAdapter(TaskList.this,
+                    taskService
+                            .getActualTasks());
+        } catch (DbxException e) {
+            e.printStackTrace();
+        }
         updateDate = "";
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         fragmentManager = this.getFragmentManager();
@@ -69,7 +75,7 @@ public class TaskList extends ListActivity {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
         TaskDTO dto = null;
         try {
-            dto = taskService.getTask(adapter.getItemId(info.position));
+            dto = taskService.getTask(adapter.getItemMyId(info.position));
         } catch (DbxException e) {
             e.printStackTrace();
         }
@@ -89,7 +95,7 @@ public class TaskList extends ListActivity {
                 .getMenuInfo();
         TaskDTO dto = null;
         try {
-            dto = taskService.getTask(adapter.getItemId(info.position));
+            dto = taskService.getTask(String.valueOf(adapter.getItemMyId(info.position)));
         } catch (DbxException e) {
             e.printStackTrace();
         }
@@ -146,7 +152,7 @@ public class TaskList extends ListActivity {
         final TaskDTO dto;
         TaskDTO dto1 = null;
         try {
-            dto1 = taskService.getTask(adapter.getItemId(position));
+            dto1 = taskService.getTask(adapter.getItemMyId(position));
         } catch (DbxException e) {
             e.printStackTrace();
         }
@@ -173,7 +179,7 @@ public class TaskList extends ListActivity {
 
             @Override
             public void onClick(View arg0) {
-                long[] ids = {dto.getId()};
+                String[] ids = {dto.getId()};
                 Intent showOnMapIntent = new Intent(TaskList.this,
                         ShowListOnMap.class);
                 showOnMapIntent.putExtra("IDS", ids);
@@ -304,8 +310,12 @@ public class TaskList extends ListActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.mn_actualTasks: {
-                adapter = new TaskArrayAdapter(TaskList.this,
-                        taskService.getActualTasks());
+                try {
+                    adapter = new TaskArrayAdapter(TaskList.this,
+                            taskService.getActualTasks());
+                } catch (DbxException e) {
+                    e.printStackTrace();
+                }
                 TaskList.this.setListAdapter(adapter);
                 if (adapter.isEmpty())
                     Toast.makeText(TaskList.this,
@@ -346,7 +356,7 @@ public class TaskList extends ListActivity {
             case R.id.mn_showAllOnMap: {
                 List<TaskDTO> dtoList = adapter.getCurrentTaskList();
                 if (!dtoList.isEmpty()) {
-                    long ids[] = new long[dtoList.size()];
+                    String ids[] = new String[dtoList.size()];
                     for (int i = 0; i < dtoList.size(); i++) {
                         ids[i] = dtoList.get(i).getId();
                     }

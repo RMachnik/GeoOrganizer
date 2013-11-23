@@ -144,8 +144,6 @@ public class ShowOnMap extends FragmentActivity {
 
     }
 
-    ;
-
     private void initilizeMap() {
         if (googleMap == null) {
             googleMap = ((MapFragment) getFragmentManager().findFragmentById(

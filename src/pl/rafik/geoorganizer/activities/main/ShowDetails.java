@@ -30,7 +30,7 @@ public class ShowDetails extends Activity {
         TaskDTO dto1 = null;
         try {
             dto1 = taskService.getTask(this.getIntent().getExtras()
-                    .getLong("id"));
+                    .getString("id"));
         } catch (DbxException e) {
             e.printStackTrace();
         }
@@ -55,7 +55,7 @@ public class ShowDetails extends Activity {
 
             @Override
             public void onClick(View arg0) {
-                long[] ids = {dto.getId()};
+                String[] ids = {dto.getId()};
                 Intent showOnMapIntent = new Intent(ShowDetails.this,
                         ShowListOnMap.class);
                 showOnMapIntent.putExtra("IDS", ids);

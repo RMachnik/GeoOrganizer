@@ -13,6 +13,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import com.dropbox.sync.android.DbxAccountManager;
+import com.dropbox.sync.android.DbxDatastore;
+import com.dropbox.sync.android.DbxException;
 import pl.rafik.geoorganizer.R;
 import pl.rafik.geoorganizer.activities.preferences.RunPreferences;
 import pl.rafik.geoorganizer.dbx.DbxStart;
@@ -33,8 +35,6 @@ public class Welcome extends Activity {
     private Builder alert;
     private LocationManager lm;
     private int one = 0;
-    private String APP_KEY;
-    private String APP_SECRET;
     private DbxAccountManager dbxAccountManager;
 
     @Override
@@ -138,13 +138,18 @@ public class Welcome extends Activity {
     }
 
     private void initialiseDbx() {
-        APP_KEY = getString(R.string.DROPBOX_APP_KEY);
-        APP_SECRET = getString(R.string.DROPBOX_SECRET_KEY);
-        dbxAccountManager = DbxAccountManager.getInstance(getApplicationContext(), APP_KEY, APP_SECRET);
+        DbxStart.APP_KEY = getString(R.string.DROPBOX_APP_KEY);
+        DbxStart.APP_SECRET = getString(R.string.DROPBOX_SECRET_KEY);
+        DbxStart.dbxAccountManager = DbxAccountManager.getInstance(getApplicationContext(), DbxStart.APP_KEY, DbxStart.APP_SECRET);
+        try {
+            DbxStart.dbxDatastore = DbxDatastore.openDefault(DbxStart.dbxAccountManager.getLinkedAccount());
+        } catch (DbxException e) {
+            e.printStackTrace();
+        }
     }
 
     private void checkDbxLinkedAccount() {
-        if (dbxAccountManager.hasLinkedAccount()) {
+        if (DbxStart.dbxAccountManager.hasLinkedAccount()) {
             // already have an account linked
 
         } else {

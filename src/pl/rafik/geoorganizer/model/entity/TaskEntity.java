@@ -2,7 +2,7 @@ package pl.rafik.geoorganizer.model.entity;
 
 public class TaskEntity {
 
-	private Long id;
+	private String id;
 	private String note;
 	private String data;
 	private String latitude;
@@ -11,11 +11,11 @@ public class TaskEntity {
 	private String priority;
 	private String status;
 
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 

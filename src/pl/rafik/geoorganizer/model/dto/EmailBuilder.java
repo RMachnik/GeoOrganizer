@@ -38,11 +38,11 @@ public class EmailBuilder {
         return emailModel;
     }
 
-    public EmailModel buildCurrentTask(Long id) throws DbxException {
+    public EmailModel buildCurrentTask(String id) throws DbxException {
         EmailModel emailModel = new EmailModel();
         emailModel.setEmail("");
         List<TaskDTO> taskDTOList = new ArrayList<TaskDTO>();
-        taskDTOList.add(taskService.getTask(id));
+        taskDTOList.add(taskService.getTask(String.valueOf(id)));
         emailModel.setTaskDTOList(taskDTOList);
         return emailModel;
     }

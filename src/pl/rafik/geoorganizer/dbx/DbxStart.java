@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 import com.dropbox.sync.android.DbxAccountManager;
+import com.dropbox.sync.android.DbxDatastore;
+import com.dropbox.sync.android.DbxException;
 import pl.rafik.geoorganizer.R;
 import pl.rafik.geoorganizer.activities.main.Welcome;
 
@@ -16,9 +18,10 @@ import pl.rafik.geoorganizer.activities.main.Welcome;
  */
 public class DbxStart extends Activity {
     public static final int REQUEST_LINK_TO_DBX = 3;
-    private DbxAccountManager dbxAccountManager;
-    private String APP_KEY;
-    private String APP_SECRET;
+    public static DbxAccountManager dbxAccountManager;
+    public static DbxDatastore dbxDatastore;
+    public static String APP_KEY;
+    public static String APP_SECRET;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +48,11 @@ public class DbxStart extends Activity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_LINK_TO_DBX) {
             if (resultCode == RESULT_OK) {
+                try {
+                    dbxDatastore = DbxDatastore.openDefault(DbxStart.dbxAccountManager.getLinkedAccount());
+                } catch (DbxException e) {
+                    e.printStackTrace();
+                }
                 Intent welcome = new Intent(DbxStart.this, Welcome.class);
                 startActivity(welcome);
             } else {

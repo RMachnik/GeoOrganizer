@@ -8,18 +8,18 @@ package pl.rafik.geoorganizer.model.dto;
  */
 public class TaskBuilder {
 
-    private Long id;
+    private String id;
     private String note;
     private GeoLocalisation localisation;
     private String date;
     private String priority;
     private String status;
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
