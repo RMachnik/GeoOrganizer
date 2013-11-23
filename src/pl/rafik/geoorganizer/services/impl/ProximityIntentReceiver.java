@@ -1,5 +1,6 @@
 package pl.rafik.geoorganizer.services.impl;
 
+import com.dropbox.sync.android.DbxException;
 import pl.rafik.geoorganizer.R;
 import pl.rafik.geoorganizer.activities.main.ShowDetails;
 import pl.rafik.geoorganizer.model.dto.TaskDTO;
@@ -47,8 +48,13 @@ public class ProximityIntentReceiver extends BroadcastReceiver {
 				.getSystemService(Context.NOTIFICATION_SERVICE);
 		taskService = new TaskService(context);
 		Bundle bundle = intent.getExtras();
-		TaskDTO dto = taskService.getTask(bundle.getLong("id"));
-		Boolean entering = intent.getBooleanExtra(key, false);
+        TaskDTO dto = null;
+        try {
+            dto = taskService.getTask(bundle.getLong("id"));
+        } catch (DbxException e) {
+            e.printStackTrace();
+        }
+        Boolean entering = intent.getBooleanExtra(key, false);
 		long pattern[] = new long[Integer.parseInt(repeat) * 2];
 		for (int i = 0; i < pattern.length; i++) {
 			pattern[i] = Long.parseLong(vmodel[i % 2]);

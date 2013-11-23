@@ -1,7 +1,7 @@
 <component name="libraryTable">
   <library name="mips">
     <CLASSES>
-      <root url="file://$PROJECT_DIR$/libs/dropbox-android-sync-sdk-2.0.3/libs/mips" />
+      <root url="file://$PROJECT_DIR$/libs/mips" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

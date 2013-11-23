@@ -1,6 +1,7 @@
 package pl.rafik.geoorganizer.model.dto;
 
 import android.content.Context;
+import com.dropbox.sync.android.DbxException;
 import pl.rafik.geoorganizer.services.ITaskService;
 import pl.rafik.geoorganizer.services.impl.TaskService;
 
@@ -37,7 +38,7 @@ public class EmailBuilder {
         return emailModel;
     }
 
-    public EmailModel buildCurrentTask(Long id) {
+    public EmailModel buildCurrentTask(Long id) throws DbxException {
         EmailModel emailModel = new EmailModel();
         emailModel.setEmail("");
         List<TaskDTO> taskDTOList = new ArrayList<TaskDTO>();

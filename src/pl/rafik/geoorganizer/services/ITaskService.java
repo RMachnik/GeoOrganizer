@@ -2,6 +2,7 @@ package pl.rafik.geoorganizer.services;
 
 import java.util.List;
 
+import com.dropbox.sync.android.DbxException;
 import pl.rafik.geoorganizer.model.dto.GeoLocalisation;
 import pl.rafik.geoorganizer.model.dto.TaskDTO;
 
@@ -19,14 +20,14 @@ public interface ITaskService {
 	 * @param dto
 	 * @return
 	 */
-	public Long addNewTask(TaskDTO dto);
+	public Long addNewTask(TaskDTO dto) throws DbxException;
 
 	/**
 	 * Metoda zwraca wszystkie taski z bazy.
 	 * 
 	 * @return
 	 */
-	public List<TaskDTO> getAllTasks();
+	public List<TaskDTO> getAllTasks() throws DbxException;
 
 	/**
 	 * Metoda zwracajaca taska o podanym ID.
@@ -34,7 +35,7 @@ public interface ITaskService {
 	 * @param id
 	 * @return
 	 */
-	public TaskDTO getTask(Long id);
+	public TaskDTO getTask(Long id) throws DbxException;
 
 	/**
 	 * Metoda pobiera task zwiazany z danym punktem lokalizacyjnym.
@@ -87,7 +88,7 @@ public interface ITaskService {
 	 * @param id
 	 * @return zwraca liczbe usunietych wierszy
 	 */
-	public int deleteTask(Long id);
+	public int deleteTask(Long id) throws DbxException;
 
 	/**
 	 * Metoda pobiera task zgodny z lokalizacja.
@@ -110,7 +111,7 @@ public interface ITaskService {
 	 * @param id
 	 * @return
 	 */
-	public int makeDone(Long id);
+	public int makeDone(Long id) throws DbxException;
 
 	/**
 	 * Zmienia status zdania na niewykonane.
@@ -118,5 +119,5 @@ public interface ITaskService {
 	 * @param id
 	 * @return
 	 */
-	public int makeNotDone(Long id);
+	public int makeNotDone(Long id) throws DbxException;
 }

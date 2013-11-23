@@ -1,7 +1,7 @@
 <component name="libraryTable">
   <library name="x86">
     <CLASSES>
-      <root url="file://$PROJECT_DIR$/libs/dropbox-android-sync-sdk-2.0.3/libs/x86" />
+      <root url="file://$PROJECT_DIR$/libs/x86" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

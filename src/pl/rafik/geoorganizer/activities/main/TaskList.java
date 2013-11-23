@@ -11,6 +11,7 @@ import android.view.*;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnClickListener;
 import android.widget.*;
+import com.dropbox.sync.android.DbxException;
 import pl.rafik.geoorganizer.R;
 import pl.rafik.geoorganizer.activities.list.TaskArrayAdapter;
 import pl.rafik.geoorganizer.activities.map.ShowListOnMap;
@@ -66,7 +67,12 @@ public class TaskList extends ListActivity {
                                     ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-        TaskDTO dto = taskService.getTask(adapter.getItemId(info.position));
+        TaskDTO dto = null;
+        try {
+            dto = taskService.getTask(adapter.getItemId(info.position));
+        } catch (DbxException e) {
+            e.printStackTrace();
+        }
         menu.setHeaderTitle("wazny do:" + dto.getDate()
                 + System.getProperty("line.separator") + "priorytet: "
                 + dto.getPriority() + System.getProperty("line.separator")
@@ -81,7 +87,12 @@ public class TaskList extends ListActivity {
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item
                 .getMenuInfo();
-        TaskDTO dto = taskService.getTask(adapter.getItemId(info.position));
+        TaskDTO dto = null;
+        try {
+            dto = taskService.getTask(adapter.getItemId(info.position));
+        } catch (DbxException e) {
+            e.printStackTrace();
+        }
         switch (item.getItemId()) {
             case R.id.mn_editTask: {
 
@@ -92,18 +103,23 @@ public class TaskList extends ListActivity {
             }
             case R.id.mn_deleteTask: {
                 Log.d("wszedlem do", "delete!!!!");
-                if (taskService.deleteTask(dto.getId()) > 0) {
-                    proximityService.removeAlert(dto);
-                    vibrator.vibrate(200);
-                    Toast.makeText(TaskList.this, "Usunieto.", Toast.LENGTH_SHORT)
-                            .show();
-                    adapter = new TaskArrayAdapter(TaskList.this,
-                            taskService.getNotDoneTasks());
-                    TaskList.this.setListAdapter(adapter);
+                assert dto != null;
+                try {
+                    if (taskService.deleteTask(dto.getId()) > 0) {
+                        proximityService.removeAlert(dto);
+                        vibrator.vibrate(200);
+                        Toast.makeText(TaskList.this, "Usunieto.", Toast.LENGTH_SHORT)
+                                .show();
+                        adapter = new TaskArrayAdapter(TaskList.this,
+                                taskService.getNotDoneTasks());
+                        TaskList.this.setListAdapter(adapter);
 
-                } else {
-                    Toast.makeText(TaskList.this, "Nie usunieto zdarzneia!",
-                            Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(TaskList.this, "Nie usunieto zdarzneia!",
+                                Toast.LENGTH_LONG).show();
+                    }
+                } catch (DbxException e) {
+                    e.printStackTrace();
                 }
                 return true;
             }
@@ -112,7 +128,11 @@ public class TaskList extends ListActivity {
                 EmailBuilder emailBuilder = new EmailBuilder(this.getApplicationContext());
 
                 IEmailService service = new EmailService();
-                service.sendEmail(emailBuilder.buildCurrentTask(dto.getId()), this);
+                try {
+                    service.sendEmail(emailBuilder.buildCurrentTask(dto.getId()), this);
+                } catch (DbxException e) {
+                    e.printStackTrace();
+                }
 
             }
 
@@ -123,7 +143,14 @@ public class TaskList extends ListActivity {
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
         final Dialog dialog = new Dialog(TaskList.this);
-        final TaskDTO dto = taskService.getTask(adapter.getItemId(position));
+        final TaskDTO dto;
+        TaskDTO dto1 = null;
+        try {
+            dto1 = taskService.getTask(adapter.getItemId(position));
+        } catch (DbxException e) {
+            e.printStackTrace();
+        }
+        dto = dto1;
         dialog.setContentView(R.layout.custom_dialog);
         TextView tvDialog = (TextView) dialog.findViewById(R.id.dialog_tv);
         dialog.setTitle(dto.getNote());
@@ -166,7 +193,11 @@ public class TaskList extends ListActivity {
                 if (!lista.isEmpty()) {
 
                     for (TaskDTO dto : lista) {
-                        refreshed.add(taskService.getTask(dto.getId()));
+                        try {
+                            refreshed.add(taskService.getTask(dto.getId()));
+                        } catch (DbxException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
                 TaskList.this.setListAdapter(new TaskArrayAdapter(
@@ -179,14 +210,18 @@ public class TaskList extends ListActivity {
             @Override
             public void onClick(View arg0) {
                 if (dto.getStatus().equals("NOT")) {
-                    if (taskService.makeDone(dto.getId()) > 0) {
-                        Toast.makeText(TaskList.this, "Zmieniono status!",
-                                Toast.LENGTH_SHORT).show();
-                        image.setImageResource(R.drawable.ic_ok);
-                    } else {
-                        Toast.makeText(TaskList.this,
-                                "Status nie zostal zmieniony!",
-                                Toast.LENGTH_SHORT).show();
+                    try {
+                        if (taskService.makeDone(dto.getId()) > 0) {
+                            Toast.makeText(TaskList.this, "Zmieniono status!",
+                                    Toast.LENGTH_SHORT).show();
+                            image.setImageResource(R.drawable.ic_ok);
+                        } else {
+                            Toast.makeText(TaskList.this,
+                                    "Status nie zostal zmieniony!",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (DbxException e) {
+                        e.printStackTrace();
                     }
 
                 } else {
@@ -207,14 +242,18 @@ public class TaskList extends ListActivity {
                         Log.d("DAO", "blad parsowania daty");
                     }
                     if (c.before(tmp)) {
-                        if (taskService.makeNotDone(dto.getId()) > 0) {
-                            Toast.makeText(TaskList.this, "Zmieniono status!",
-                                    Toast.LENGTH_SHORT).show();
-                            image.setImageResource(R.drawable.ic_not);
-                        } else {
-                            Toast.makeText(TaskList.this,
-                                    "Status nie zostal zmieniony!",
-                                    Toast.LENGTH_SHORT).show();
+                        try {
+                            if (taskService.makeNotDone(dto.getId()) > 0) {
+                                Toast.makeText(TaskList.this, "Zmieniono status!",
+                                        Toast.LENGTH_SHORT).show();
+                                image.setImageResource(R.drawable.ic_not);
+                            } else {
+                                Toast.makeText(TaskList.this,
+                                        "Status nie zostal zmieniony!",
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (DbxException e) {
+                            e.printStackTrace();
                         }
                         // kiedy data jest nieaktualna
                     } else {
@@ -322,8 +361,12 @@ public class TaskList extends ListActivity {
                 return true;
             }
             case R.id.mn_allTasks: {
-                adapter = new TaskArrayAdapter(TaskList.this,
-                        taskService.getAllTasks());
+                try {
+                    adapter = new TaskArrayAdapter(TaskList.this,
+                            taskService.getAllTasks());
+                } catch (DbxException e) {
+                    e.printStackTrace();
+                }
                 this.setListAdapter(adapter);
                 if (adapter.isEmpty())
                     Toast.makeText(TaskList.this, "Lista zadan jest pusta!",
@@ -363,7 +406,11 @@ public class TaskList extends ListActivity {
                     + String.valueOf(monthOfYear) + "-" + String.valueOf(year);
             dto.setDate(updateDate);
             taskService.updateTask(dto);
-            taskService.makeNotDone(dto.getId());
+            try {
+                taskService.makeNotDone(dto.getId());
+            } catch (DbxException e) {
+                e.printStackTrace();
+            }
             image.setImageResource(R.drawable.ic_not);
 
         }

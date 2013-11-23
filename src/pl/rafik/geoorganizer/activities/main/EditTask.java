@@ -2,6 +2,7 @@ package pl.rafik.geoorganizer.activities.main;
 
 import java.util.Calendar;
 
+import com.dropbox.sync.android.DbxException;
 import pl.rafik.geoorganizer.R;
 import pl.rafik.geoorganizer.activities.map.ShowOnMap;
 import pl.rafik.geoorganizer.model.dto.GeoLocalisation;
@@ -72,8 +73,12 @@ public class EditTask extends Activity {
 		fragmentManager = this.getFragmentManager();
 		Bundle bundle = getIntent().getExtras();
 		Long id = bundle.getLong("ID");
-		dto = taskService.getTask(id);
-		setContentView(R.layout.edit_task);
+        try {
+            dto = taskService.getTask(id);
+        } catch (DbxException e) {
+            e.printStackTrace();
+        }
+        setContentView(R.layout.edit_task);
 		handler = new RefreshHandler();
 		simpleHandler = new RefreshHandler1();
 		radioGroup = (RadioGroup) findViewById(R.id.edt_priority_group);

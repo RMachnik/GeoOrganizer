@@ -2,6 +2,7 @@
 
     <string name="app_name">GeoOrganizer</string>
     <string name="menu_settings">Settings</string>
+    <string name="timeout">3000</string>
     <string name="title_activity_main">GeoOrganizer</string>
     <string name="title_new_task">Dodawanie nowego zadania</string>
     <string name="task_note">Tytuł</string>
@@ -55,7 +56,9 @@
     <string name="sound_choice_summary">Lista dostępnych dźwięków powiadomienia</string>
     <string name="show_on_map">Pokaż na mapie</string>
     <string name="mn_allTasks">Wszystkie zadania</string>
-    <string name="DROPBOX_APP_KEY" >fi8ohbw5vxcp623</string>
-    <string name="DROPBOX_SECRET_KEY">mcgmtjfdtgzz65k</string>
+    <string name="DROPBOX_APP_KEY" >wzid3rxyqgf9tfl</string>
+    <string name="DROPBOX_SECRET_KEY">3z7d6lazq72onze</string>
+    <string name="link_button">Link to dropbox</string>
+
 
 </resources>

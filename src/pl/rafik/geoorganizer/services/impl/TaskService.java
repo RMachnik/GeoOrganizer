@@ -3,6 +3,7 @@ package pl.rafik.geoorganizer.services.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.dropbox.sync.android.DbxException;
 import pl.rafik.geoorganizer.dao.ITaskDAO;
 import pl.rafik.geoorganizer.dao.TaskDAO;
 import pl.rafik.geoorganizer.model.dto.GeoLocalisation;
@@ -23,7 +24,7 @@ public class TaskService implements ITaskService {
 	}
 
 	@Override
-	public Long addNewTask(TaskDTO dto) {
+	public Long addNewTask(TaskDTO dto) throws DbxException {
 		TaskEntity ent = new TaskEntity();
 		ent.setData(dto.getDate());
 		ent.setLatitude(dto.getLocalisation().getLatitude());
@@ -38,7 +39,7 @@ public class TaskService implements ITaskService {
 	}
 
 	@Override
-	public TaskDTO getTask(Long id) {
+	public TaskDTO getTask(Long id) throws DbxException {
 		TaskEntity ent = new TaskEntity();
 		ent = daoService.getTask(id);
 		TaskDTO dto = new TaskDTO();
@@ -185,7 +186,7 @@ public class TaskService implements ITaskService {
 	}
 
 	@Override
-	public int deleteTask(Long id) {
+	public int deleteTask(Long id) throws DbxException {
 		proxiService.removeAlert(this.getTask(id));
 		return daoService.deleteTask(id);
 	}
@@ -233,19 +234,19 @@ public class TaskService implements ITaskService {
 	}
 
 	@Override
-	public int makeDone(Long id) {
+	public int makeDone(Long id) throws DbxException {
 		proxiService.removeAlert(this.getTask(id));
 		return daoService.makeDone(id);
 	}
 
 	@Override
-	public int makeNotDone(Long id) {
+	public int makeNotDone(Long id) throws DbxException {
 		proxiService.addProximityAlert(this.getTask(id));
 		return daoService.makeNotDone(id);
 	}
 
 	@Override
-	public List<TaskDTO> getAllTasks() {
+	public List<TaskDTO> getAllTasks() throws DbxException {
 		List<TaskDTO> dtoList = new ArrayList<TaskDTO>();
 		List<TaskEntity> entList = new ArrayList<TaskEntity>();
 		entList = daoService.getAllTasks();
