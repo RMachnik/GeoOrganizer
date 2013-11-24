@@ -16,32 +16,36 @@ public class PreferencesFragment extends PreferenceFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.layout.preferences);
-		soundChose = (Preference) findPreference("chose_sound");
-		soundChose.setDependency("sound_pref_checkbox");
-		soundChose
-				.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-					@Override
-					public boolean onPreferenceClick(Preference preference) {
-						Intent intent = new Intent(
-								RingtoneManager.ACTION_RINGTONE_PICKER);
-						intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE,
-								"Select ringtone for notifications:");
-						intent.putExtra(
-								RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT,
-								false);
-						intent.putExtra(
-								RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT,
-								true);
-						intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE,
-								RingtoneManager.TYPE_NOTIFICATION);
-						PreferencesFragment.this.startActivityForResult(intent,
-								1);
-						return true;
-					}
-				});
+        initialisePreferences();
 	}
 
-	@Override
+    private void initialisePreferences() {
+        soundChose = (Preference) findPreference("chose_sound");
+        soundChose.setDependency("sound_pref_checkbox");
+        soundChose
+                .setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                    @Override
+                    public boolean onPreferenceClick(Preference preference) {
+                        Intent intent = new Intent(
+                                RingtoneManager.ACTION_RINGTONE_PICKER);
+                        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE,
+                                "Select ringtone for notifications:");
+                        intent.putExtra(
+                                RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT,
+                                false);
+                        intent.putExtra(
+                                RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT,
+                                true);
+                        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE,
+                                RingtoneManager.TYPE_NOTIFICATION);
+                        PreferencesFragment.this.startActivityForResult(intent,
+                                1);
+                        return true;
+                    }
+                });
+    }
+
+    @Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == Activity.RESULT_OK) {
 			Uri uri = data

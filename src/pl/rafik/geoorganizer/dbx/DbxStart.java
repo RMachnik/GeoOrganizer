@@ -1,6 +1,7 @@
 package pl.rafik.geoorganizer.dbx;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -27,10 +28,7 @@ public class DbxStart extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dbx_link);
-        APP_KEY = getString(R.string.DROPBOX_APP_KEY);
-        APP_SECRET = getString(R.string.DROPBOX_SECRET_KEY);
-        dbxAccountManager = DbxAccountManager.getInstance(getApplicationContext(), APP_KEY, APP_SECRET);
-        setContentView(R.layout.dbx_link);
+        initialiseDbx(getApplicationContext());
 
         Button linkButton = (Button) findViewById(R.id.link_button);
         linkButton.setOnClickListener(new View.OnClickListener() {
@@ -39,8 +37,30 @@ public class DbxStart extends Activity {
                 dbxAccountManager.startLink(DbxStart.this, REQUEST_LINK_TO_DBX);
             }
         });
+    }
 
+    public DbxDatastore getOpenedDatastore() {
+        if (dbxDatastore == null) {
+            try {
+                dbxDatastore = DbxDatastore.openDefault(DbxStart.dbxAccountManager.getLinkedAccount());
+            } catch (DbxException e) {
+                e.printStackTrace();
+            }
+        }
+        if (!dbxDatastore.isOpen()) {
+            try {
+                dbxDatastore = DbxDatastore.openDefault(DbxStart.dbxAccountManager.getLinkedAccount());
+            } catch (DbxException e) {
+                e.printStackTrace();
+            }
+        }
+        return dbxDatastore;
+    }
 
+    public void initialiseDbx(Context context) {
+        APP_KEY = context.getString(R.string.DROPBOX_APP_KEY);
+        APP_SECRET = context.getString(R.string.DROPBOX_SECRET_KEY);
+        dbxAccountManager = DbxAccountManager.getInstance(context, APP_KEY, APP_SECRET);
     }
 
     @Override
@@ -48,11 +68,6 @@ public class DbxStart extends Activity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_LINK_TO_DBX) {
             if (resultCode == RESULT_OK) {
-                try {
-                    dbxDatastore = DbxDatastore.openDefault(DbxStart.dbxAccountManager.getLinkedAccount());
-                } catch (DbxException e) {
-                    e.printStackTrace();
-                }
                 Intent welcome = new Intent(DbxStart.this, Welcome.class);
                 startActivity(welcome);
             } else {

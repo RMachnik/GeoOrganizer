@@ -9,6 +9,7 @@ import com.dropbox.sync.android.DbxException;
 import pl.rafik.geoorganizer.model.dto.GeoLocalisation;
 import pl.rafik.geoorganizer.model.entity.TaskEntity;
 import pl.rafik.geoorganizer.model.entity.TaskOpenHelper;
+import pl.rafik.geoorganizer.util.DateUtil;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -50,17 +51,7 @@ public class TaskDAO extends TaskOpenHelper implements ITaskDAO {
                     null, null);
             TaskEntity ent = new TaskEntity();
             if (cur.moveToFirst()) {
-                ent.setId(id);
-                ent.setLatitude(new String(cur.getBlob(cur
-                        .getColumnIndex(TASK_LATITUDE))));
-                ent.setLongitude(new String(cur.getBlob(cur
-                        .getColumnIndex(TASK_LONGITUDE))));
-                ent.setLocalistationAddress(cur.getString(cur
-                        .getColumnIndex(TASK_ADDRESS)));
-                ent.setData(cur.getString(cur.getColumnIndex(TASK_DATE)));
-                ent.setNote(cur.getString(cur.getColumnIndex(TASK_NOTE)));
-                ent.setPriority(cur.getString(cur.getColumnIndex(TASK_PRIORITY)));
-                ent.setStatus(cur.getString(cur.getColumnIndex(TASK_STATUS)));
+                convertToEntity(id, cur, ent);
                 return ent;
             } else
                 return null;
@@ -85,19 +76,7 @@ public class TaskDAO extends TaskOpenHelper implements ITaskDAO {
                 if (cur.moveToFirst()) {
                     do {
                         TaskEntity ent = new TaskEntity();
-                        ent.setId(String.valueOf(cur.getLong(cur.getColumnIndex(ID))));
-                        ent.setLatitude(new String(cur.getBlob(cur
-                                .getColumnIndex(TASK_LATITUDE))));
-                        ent.setLongitude(new String(cur.getBlob(cur
-                                .getColumnIndex(TASK_LONGITUDE))));
-                        ent.setLocalistationAddress(cur.getString(cur
-                                .getColumnIndex(TASK_ADDRESS)));
-                        ent.setData(cur.getString(cur.getColumnIndex(TASK_DATE)));
-                        ent.setNote(cur.getString(cur.getColumnIndex(TASK_NOTE)));
-                        ent.setPriority(cur.getString(cur
-                                .getColumnIndex(TASK_PRIORITY)));
-                        ent.setStatus(cur.getString(cur
-                                .getColumnIndex(TASK_STATUS)));
+                        convertToEntity(String.valueOf(cur.getLong(cur.getColumnIndex(ID))), cur, ent);
                         list.add(ent);
                     } while (cur.moveToNext());
                 }
@@ -112,19 +91,7 @@ public class TaskDAO extends TaskOpenHelper implements ITaskDAO {
                 if (cur.moveToFirst()) {
                     do {
                         TaskEntity ent = new TaskEntity();
-                        ent.setId(String.valueOf(cur.getLong(cur.getColumnIndex(ID))));
-                        ent.setLatitude(new String(cur.getBlob(cur
-                                .getColumnIndex(TASK_LATITUDE))));
-                        ent.setLongitude(new String(cur.getBlob(cur
-                                .getColumnIndex(TASK_LONGITUDE))));
-                        ent.setLocalistationAddress(cur.getString(cur
-                                .getColumnIndex(TASK_ADDRESS)));
-                        ent.setData(cur.getString(cur.getColumnIndex(TASK_DATE)));
-                        ent.setNote(cur.getString(cur.getColumnIndex(TASK_NOTE)));
-                        ent.setPriority(cur.getString(cur
-                                .getColumnIndex(TASK_PRIORITY)));
-                        ent.setStatus(cur.getString(cur
-                                .getColumnIndex(TASK_STATUS)));
+                        convertToEntity(String.valueOf(cur.getLong(cur.getColumnIndex(ID))), cur, ent);
                         list.add(ent);
 
                     } while (cur.moveToNext());
@@ -187,18 +154,7 @@ public class TaskDAO extends TaskOpenHelper implements ITaskDAO {
             if (cur.moveToFirst()) {
                 do {
                     TaskEntity ent = new TaskEntity();
-                    ent.setId(String.valueOf(cur.getLong(cur.getColumnIndex(ID))));
-                    ent.setLatitude(new String(cur.getBlob(cur
-                            .getColumnIndex(TASK_LATITUDE))));
-                    ent.setLongitude(new String(cur.getBlob(cur
-                            .getColumnIndex(TASK_LONGITUDE))));
-                    ent.setLocalistationAddress(cur.getString(cur
-                            .getColumnIndex(TASK_ADDRESS)));
-                    ent.setData(cur.getString(cur.getColumnIndex(TASK_DATE)));
-                    ent.setNote(cur.getString(cur.getColumnIndex(TASK_NOTE)));
-                    ent.setPriority(cur.getString(cur
-                            .getColumnIndex(TASK_PRIORITY)));
-                    ent.setStatus(cur.getString(cur.getColumnIndex(TASK_STATUS)));
+                    convertToEntity(String.valueOf(cur.getLong(cur.getColumnIndex(ID))), cur, ent);
                     list.add(ent);
                 } while (cur.moveToNext());
             }
@@ -220,18 +176,7 @@ public class TaskDAO extends TaskOpenHelper implements ITaskDAO {
             if (cur.moveToFirst()) {
                 do {
                     TaskEntity ent = new TaskEntity();
-                    ent.setId(String.valueOf(cur.getLong(cur.getColumnIndex(ID))));
-                    ent.setLatitude(new String(cur.getBlob(cur
-                            .getColumnIndex(TASK_LATITUDE))));
-                    ent.setLongitude(new String(cur.getBlob(cur
-                            .getColumnIndex(TASK_LONGITUDE))));
-                    ent.setLocalistationAddress(cur.getString(cur
-                            .getColumnIndex(TASK_ADDRESS)));
-                    ent.setData(cur.getString(cur.getColumnIndex(TASK_DATE)));
-                    ent.setNote(cur.getString(cur.getColumnIndex(TASK_NOTE)));
-                    ent.setPriority(cur.getString(cur
-                            .getColumnIndex(TASK_PRIORITY)));
-                    ent.setStatus(cur.getString(cur.getColumnIndex(TASK_STATUS)));
+                    convertToEntity(String.valueOf(cur.getLong(cur.getColumnIndex(ID))), cur, ent);
                     list.add(ent);
                 } while (cur.moveToNext());
             }
@@ -252,33 +197,11 @@ public class TaskDAO extends TaskOpenHelper implements ITaskDAO {
             if (cur.moveToFirst()) {
                 do {
                     TaskEntity ent = new TaskEntity();
-                    ent.setId(String.valueOf(cur.getLong(cur.getColumnIndex(ID))));
-                    ent.setLatitude(new String(cur.getBlob(cur
-                            .getColumnIndex(TASK_LATITUDE))));
-                    ent.setLongitude(new String(cur.getBlob(cur
-                            .getColumnIndex(TASK_LONGITUDE))));
-                    ent.setLocalistationAddress(cur.getString(cur
-                            .getColumnIndex(TASK_ADDRESS)));
-                    ent.setData(cur.getString(cur.getColumnIndex(TASK_DATE)));
-                    ent.setNote(cur.getString(cur.getColumnIndex(TASK_NOTE)));
-                    ent.setPriority(cur.getString(cur
-                            .getColumnIndex(TASK_PRIORITY)));
-                    ent.setStatus(cur.getString(cur.getColumnIndex(TASK_STATUS)));
+                    convertToEntity(String.valueOf(cur.getLong(cur.getColumnIndex(ID))), cur, ent);
                     Log.d("dao", ent.getData());
                     Calendar tmp = Calendar.getInstance();
                     String dtime[] = ent.getData().split(" ");
-                    if (dtime.length > 1) {
-                        String data[] = dtime[0].split("-");
-                        tmp.set(Calendar.DAY_OF_MONTH,
-                                Integer.parseInt(data[0]));
-                        tmp.set(Calendar.MONTH, Integer.parseInt(data[1]));
-                        tmp.set(Calendar.YEAR, Integer.parseInt(data[2]));
-                        String[] time = dtime[1].split(":");
-                        tmp.set(Calendar.HOUR_OF_DAY, Integer.parseInt(time[0]));
-                        tmp.set(Calendar.MINUTE, Integer.parseInt(time[1]));
-                    } else {
-                        Log.d("DAO", "blad parsowania daty");
-                    }
+                    DateUtil.parseDate(tmp, dtime);
                     if (c.before(tmp))
                         list.add(ent);
                 } while (cur.moveToNext());
@@ -301,32 +224,10 @@ public class TaskDAO extends TaskOpenHelper implements ITaskDAO {
             if (cur.moveToFirst()) {
                 do {
                     TaskEntity ent = new TaskEntity();
-                    ent.setId(String.valueOf(cur.getLong(cur.getColumnIndex(ID))));
-                    ent.setLatitude(new String(cur.getBlob(cur
-                            .getColumnIndex(TASK_LATITUDE))));
-                    ent.setLongitude(new String(cur.getBlob(cur
-                            .getColumnIndex(TASK_LONGITUDE))));
-                    ent.setLocalistationAddress(cur.getString(cur
-                            .getColumnIndex(TASK_ADDRESS)));
-                    ent.setData(cur.getString(cur.getColumnIndex(TASK_DATE)));
-                    ent.setNote(cur.getString(cur.getColumnIndex(TASK_NOTE)));
-                    ent.setPriority(cur.getString(cur
-                            .getColumnIndex(TASK_PRIORITY)));
-                    ent.setStatus(cur.getString(cur.getColumnIndex(TASK_STATUS)));
+                    convertToEntity(String.valueOf(cur.getLong(cur.getColumnIndex(ID))), cur, ent);
                     Calendar tmp = Calendar.getInstance();
                     String dtime[] = ent.getData().split(" ");
-                    if (dtime.length > 1) {
-                        String data[] = dtime[0].split("-");
-                        tmp.set(Calendar.DAY_OF_MONTH,
-                                Integer.parseInt(data[0]));
-                        tmp.set(Calendar.MONTH, Integer.parseInt(data[1]));
-                        tmp.set(Calendar.YEAR, Integer.parseInt(data[2]));
-                        String[] time = dtime[1].split(":");
-                        tmp.set(Calendar.HOUR_OF_DAY, Integer.parseInt(time[0]));
-                        tmp.set(Calendar.MINUTE, Integer.parseInt(time[1]));
-                    } else {
-                        Log.d("DAO", "blad parsowania daty");
-                    }
+                    DateUtil.parseDate(tmp, dtime);
                     if (c.after(tmp))
                         list.add(ent);
                 } while (cur.moveToNext());
@@ -377,17 +278,7 @@ public class TaskDAO extends TaskOpenHelper implements ITaskDAO {
         for (TaskEntity ent : lista) {
             Calendar tmp = Calendar.getInstance();
             String dtime[] = ent.getData().split(" ");
-            if (dtime.length > 1) {
-                String data[] = dtime[0].split("-");
-                tmp.set(Calendar.DAY_OF_MONTH, Integer.parseInt(data[0]));
-                tmp.set(Calendar.MONTH, Integer.parseInt(data[1]));
-                tmp.set(Calendar.YEAR, Integer.parseInt(data[2]));
-                String[] time = dtime[1].split(":");
-                tmp.set(Calendar.HOUR_OF_DAY, Integer.parseInt(time[0]));
-                tmp.set(Calendar.MINUTE, Integer.parseInt(time[1]));
-            } else {
-                Log.d("DAO", "blad parsowania daty");
-            }
+            DateUtil.parseDate(tmp, dtime);
             if (c.before(tmp))
                 list.add(ent);
         }
@@ -419,18 +310,7 @@ public class TaskDAO extends TaskOpenHelper implements ITaskDAO {
             if (cur.moveToFirst()) {
                 do {
                     TaskEntity ent = new TaskEntity();
-                    ent.setId(String.valueOf(cur.getLong(cur.getColumnIndex(ID))));
-                    ent.setLatitude(new String(cur.getBlob(cur
-                            .getColumnIndex(TASK_LATITUDE))));
-                    ent.setLongitude(new String(cur.getBlob(cur
-                            .getColumnIndex(TASK_LONGITUDE))));
-                    ent.setLocalistationAddress(cur.getString(cur
-                            .getColumnIndex(TASK_ADDRESS)));
-                    ent.setData(cur.getString(cur.getColumnIndex(TASK_DATE)));
-                    ent.setNote(cur.getString(cur.getColumnIndex(TASK_NOTE)));
-                    ent.setPriority(cur.getString(cur
-                            .getColumnIndex(TASK_PRIORITY)));
-                    ent.setStatus(cur.getString(cur.getColumnIndex(TASK_STATUS)));
+                    convertToEntity(String.valueOf(cur.getLong(cur.getColumnIndex(ID))), cur, ent);
                     list.add(ent);
                 } while (cur.moveToNext());
             }
@@ -439,4 +319,19 @@ public class TaskDAO extends TaskOpenHelper implements ITaskDAO {
             db.close();
         }
     }
+
+    private void convertToEntity(String id, Cursor cur, TaskEntity ent) {
+        ent.setId(id);
+        ent.setLatitude(new String(cur.getBlob(cur
+                .getColumnIndex(TASK_LATITUDE))));
+        ent.setLongitude(new String(cur.getBlob(cur
+                .getColumnIndex(TASK_LONGITUDE))));
+        ent.setLocalistationAddress(cur.getString(cur
+                .getColumnIndex(TASK_ADDRESS)));
+        ent.setData(cur.getString(cur.getColumnIndex(TASK_DATE)));
+        ent.setNote(cur.getString(cur.getColumnIndex(TASK_NOTE)));
+        ent.setPriority(cur.getString(cur.getColumnIndex(TASK_PRIORITY)));
+        ent.setStatus(cur.getString(cur.getColumnIndex(TASK_STATUS)));
+    }
+
 }

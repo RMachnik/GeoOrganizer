@@ -1,6 +1,5 @@
 package pl.rafik.geoorganizer.activities.map;
 
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import com.dropbox.sync.android.DbxException;
@@ -11,7 +10,6 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.maps.GeoPoint;
-import com.google.android.maps.Overlay;
 import com.google.android.maps.OverlayItem;
 import pl.rafik.geoorganizer.R;
 import pl.rafik.geoorganizer.model.dto.GeoLocalisation;
@@ -27,9 +25,6 @@ import java.util.List;
  * @author rafal.machnik
  */
 public class ShowListOnMap extends FragmentActivity {
-    private Drawable icon;
-    private CustomItemizedOverlayNT itemizedOverlay;
-    private List<Overlay> listOverlays;
     private GeoPoint[] points;
     private OverlayItem items[];
     private GoogleMap mv;
@@ -40,16 +35,19 @@ public class ShowListOnMap extends FragmentActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.map_list_items);
-        taskService = new TaskService(getApplicationContext());
-        tasks = new ArrayList<TaskDTO>();
-        icon = this.getResources().getDrawable(R.drawable.ic_delete);
-        itemizedOverlay = new CustomItemizedOverlayNT(icon, this);
+        initialiseServices();
+        initialiseContent();
+        setMapCenter(mv, points);
+
+    }
+
+    private void initialiseContent() {
+
         Bundle bundle = getIntent().getExtras();
         mv = ((MapFragment) getFragmentManager().findFragmentById(
                 R.id.mapView)).getMap();
         String[] ids = bundle.getStringArray("IDS");
         points = new GeoPoint[ids.length];
-    /*	listOverlays = mv.getOverlays();*/
         for (int i = 0; i < ids.length; i++) {
             TaskDTO dto = null;
             try {
@@ -67,8 +65,11 @@ public class ShowListOnMap extends FragmentActivity {
             tasks.add(dto);
         }
         items = new OverlayItem[points.length];
-        setMapCenter(mv, points);
+    }
 
+    private void initialiseServices() {
+        taskService = new TaskService(getApplicationContext());
+        tasks = new ArrayList<TaskDTO>();
     }
 
     public void setMapCenter(GoogleMap mv, GeoPoint[] points) {

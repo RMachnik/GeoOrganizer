@@ -1,7 +1,6 @@
 package pl.rafik.geoorganizer.activities.main;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -12,9 +11,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import com.dropbox.sync.android.DbxAccountManager;
-import com.dropbox.sync.android.DbxDatastore;
-import com.dropbox.sync.android.DbxException;
 import pl.rafik.geoorganizer.R;
 import pl.rafik.geoorganizer.activities.preferences.RunPreferences;
 import pl.rafik.geoorganizer.dbx.DbxStart;
@@ -35,12 +31,25 @@ public class Welcome extends Activity {
     private Builder alert;
     private LocationManager lm;
     private int one = 0;
-    private DbxAccountManager dbxAccountManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+
+        initialysiseButtons();
+        initialiseDbx();
+        checkDbxLinkedAccount();
+
+    }
+
+    private void initialiseDbx() {
+        DbxStart dbxStart = new DbxStart();
+        dbxStart.initialiseDbx(getApplicationContext());
+    }
+
+    private void initialysiseButtons() {
+
         btn = (Button) findViewById(R.id.btn_createNewTask);
         btnTaskList = (Button) findViewById(R.id.btn_showTasksList);
         help = (Button) findViewById(R.id.btn_main_help);
@@ -53,7 +62,7 @@ public class Welcome extends Activity {
             @Override
             public void onClick(View arg0) {
                 if (!lm.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                    alert = new AlertDialog.Builder(Welcome.this);
+                    alert = new Builder(Welcome.this);
                     alert.setTitle("Czy chcesz wlaczyc GPS?");
 
                     alert.setNegativeButton("Nie",
@@ -132,27 +141,10 @@ public class Welcome extends Activity {
             }
 
         });
-        initialiseDbx();
-        checkDbxLinkedAccount();
-
-    }
-
-    private void initialiseDbx() {
-        DbxStart.APP_KEY = getString(R.string.DROPBOX_APP_KEY);
-        DbxStart.APP_SECRET = getString(R.string.DROPBOX_SECRET_KEY);
-        DbxStart.dbxAccountManager = DbxAccountManager.getInstance(getApplicationContext(), DbxStart.APP_KEY, DbxStart.APP_SECRET);
-        try {
-            DbxStart.dbxDatastore = DbxDatastore.openDefault(DbxStart.dbxAccountManager.getLinkedAccount());
-        } catch (DbxException e) {
-            e.printStackTrace();
-        }
     }
 
     private void checkDbxLinkedAccount() {
-        if (DbxStart.dbxAccountManager.hasLinkedAccount()) {
-            // already have an account linked
-
-        } else {
+        if (!DbxStart.dbxAccountManager.hasLinkedAccount()) {
             // Hide the add-task UI and show the link button
             Intent listIntent = new Intent(Welcome.this, DbxStart.class);
             startActivityForResult(listIntent, 3);

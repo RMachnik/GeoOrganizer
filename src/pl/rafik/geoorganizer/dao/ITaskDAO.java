@@ -45,7 +45,7 @@ public interface ITaskDAO {
 	 * 
 	 * @return
 	 */
-	public List<TaskEntity> getFutureTasks();
+	public List<TaskEntity> getFutureTasks() throws DbxException;
 
 	/**
 	 * Metoda pobiera przeszle zadania gdzie dedline ich ulegl juz
@@ -53,21 +53,21 @@ public interface ITaskDAO {
 	 * 
 	 * @return
 	 */
-	public List<TaskEntity> getPastTasks();
+	public List<TaskEntity> getPastTasks() throws DbxException;
 
 	/**
 	 * Metoda pobiera taski ktore nie zostalywykonane.
 	 * 
 	 * @return
 	 */
-	public List<TaskEntity> getNotDoneTasks();
+	public List<TaskEntity> getNotDoneTasks() throws DbxException;
 
 	/**
 	 * Metoda pobiera wykonane zadania.
 	 * 
 	 * @return
 	 */
-	public List<TaskEntity> getDoneTasks();
+	public List<TaskEntity> getDoneTasks() throws DbxException;
 
 	/**
 	 * Metoda aktualizujaca wydarzenie.
@@ -75,7 +75,7 @@ public interface ITaskDAO {
 	 * @param ent
 	 * @return
 	 */
-	public int updateTask(TaskEntity ent);
+	public int updateTask(TaskEntity ent) throws DbxException;
 
 	/**
 	 * Metoda usuwajaca rekord bazy.
@@ -91,7 +91,7 @@ public interface ITaskDAO {
 	 * @param localisation
 	 * @return
 	 */
-	public TaskEntity getTask(GeoLocalisation localisation);
+	public TaskEntity getTask(GeoLocalisation localisation) throws DbxException;
 
 	/**
 	 * Zwraca liste aktualnych zdan, not done i future.

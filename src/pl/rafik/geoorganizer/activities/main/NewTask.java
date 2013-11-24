@@ -61,8 +61,12 @@ public class NewTask extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.newtask);
-        handler = new RefreshHandler();
-        simpleHandler = new RefreshHandler1();
+        initialiseHandlers();
+        initialiseTaskForm();
+
+    }
+
+    private void initialiseTaskForm() {
         radioGroup = (RadioGroup) findViewById(R.id.priority_group);
         findMap = (Button) findViewById(R.id.btn_find_on_map);
         service = new LocalisationService(handler, NewTask.this);
@@ -173,7 +177,11 @@ public class NewTask extends Activity {
             }
 
         });
+    }
 
+    private void initialiseHandlers() {
+        handler = new RefreshHandler();
+        simpleHandler = new RefreshHandler1();
     }
 
     // !!!!!!!!!!!!!!!! poprawic problem z zapisywaniem danych do lokalizatora.

@@ -23,7 +23,7 @@ public class EmailBuilder {
         taskService = new TaskService(context);
     }
 
-    public EmailModel buildEmailWithDoneTask() {
+    public EmailModel buildEmailWithDoneTask() throws DbxException {
 
         EmailModel emailModel = new EmailModel();
         emailModel.setEmail("");
@@ -31,7 +31,7 @@ public class EmailBuilder {
         return emailModel;
     }
 
-    public EmailModel buildEmailWithNotDoneTask() {
+    public EmailModel buildEmailWithNotDoneTask() throws DbxException {
         EmailModel emailModel = new EmailModel();
         emailModel.setEmail("");
         emailModel.setTaskDTOList(taskService.getNotDoneTasks());

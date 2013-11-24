@@ -51,28 +51,28 @@ public interface ITaskService {
 	 * 
 	 * @return
 	 */
-	public List<TaskDTO> getFutureTasks();
+	public List<TaskDTO> getFutureTasks() throws DbxException;
 
 	/**
 	 * Pobiera zdania ktorych status oznaczony jest jako NOT DONE.
 	 * 
 	 * @return
 	 */
-	public List<TaskDTO> getNotDoneTasks();
+	public List<TaskDTO> getNotDoneTasks() throws DbxException;
 
 	/**
 	 * Pobiera zadania wykonane status oznaczony jest jako DONE
 	 * 
 	 * @return
 	 */
-	public List<TaskDTO> getDoneTasks();
+	public List<TaskDTO> getDoneTasks() throws DbxException;
 
 	/**
 	 * Pobiera zadania z przeszla data waznosci.
 	 * 
 	 * @return
 	 */
-	public List<TaskDTO> getPastTasks();
+	public List<TaskDTO> getPastTasks() throws DbxException;
 
 	/**
 	 * Metoda aktualizujaca rekrod bazy danych.
@@ -80,7 +80,7 @@ public interface ITaskService {
 	 * @param dto
 	 * @return zwraca liczbe zaktualizowanych zdarzen
 	 */
-	public int updateTask(TaskDTO dto);
+	public int updateTask(TaskDTO dto) throws DbxException;
 
 	/**
 	 * Metoda usuwajaca dane wydarzenie.
@@ -96,7 +96,7 @@ public interface ITaskService {
 	 * @param localisation
 	 * @return
 	 */
-	public TaskDTO getTask(GeoLocalisation localisation);
+	public TaskDTO getTask(GeoLocalisation localisation) throws DbxException;
 
 	/**
 	 * Zwraca liste niewykonanych aktualnych zadan.

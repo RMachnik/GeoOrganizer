@@ -24,8 +24,17 @@ public class ShowDetails extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.custom_dialog);
+        initialiseServices();
+        initialiseDetails();
+
+    }
+
+    private void initialiseServices() {
         taskService = new TaskService(this);
         fragmentManager = this.getFragmentManager();
+    }
+
+    private void initialiseDetails() {
         final TaskDTO dto;
         TaskDTO dto1 = null;
         try {
@@ -137,7 +146,6 @@ public class ShowDetails extends Activity {
             }
 
         });
-
     }
 
     public void showDatePickerDialog(View v, TaskDTO dto, ImageView image) {
@@ -172,8 +180,8 @@ public class ShowDetails extends Activity {
             String updateDate = String.valueOf(dayOfMonth) + "-"
                     + String.valueOf(monthOfYear) + "-" + String.valueOf(year);
             dto.setDate(updateDate);
-            taskService.updateTask(dto);
             try {
+                taskService.updateTask(dto);
                 taskService.makeNotDone(dto.getId());
             } catch (DbxException e) {
                 e.printStackTrace();

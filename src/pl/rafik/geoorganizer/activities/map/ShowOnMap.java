@@ -59,21 +59,13 @@ public class ShowOnMap extends FragmentActivity {
         setContentView(R.layout.map);
         Bundle bundle = getIntent().getExtras();
         handler = new RefreshHandler();
-
         service = new LocalisationService(handler, this);
-
-        mv = ((MapFragment) getFragmentManager().findFragmentById(
-                R.id.map)).getMap();
-        mv.setMyLocationEnabled(true);
-        mv.getUiSettings().setMyLocationButtonEnabled(true);
-        latitude = (int) (bundle.getDouble("Latitude") * 1000000);
-        longitude = (int) (bundle.getDouble("Longitude") * 1000000);
-        Log.d("Latitude", String.valueOf(latitude));
-        Log.d("Longitude", String.valueOf(longitude));
-        point = new GeoPoint(latitude, longitude);
-
+        initialiseMap(bundle);
         setMapCenter(mv, point);
+        initialiseButtons();
+    }
 
+    private void initialiseButtons() {
         zatwierdz = (Button) findViewById(R.id.btn_confirmTaskLocation);
         searchEdt = (EditText) findViewById(R.id.et_search);
         change = (Button) findViewById(R.id.btn_searchOnMap);
@@ -126,6 +118,18 @@ public class ShowOnMap extends FragmentActivity {
             }
 
         });
+    }
+
+    private void initialiseMap(Bundle bundle) {
+        mv = ((MapFragment) getFragmentManager().findFragmentById(
+                R.id.map)).getMap();
+        mv.setMyLocationEnabled(true);
+        mv.getUiSettings().setMyLocationButtonEnabled(true);
+        latitude = (int) (bundle.getDouble("Latitude") * 1000000);
+        longitude = (int) (bundle.getDouble("Longitude") * 1000000);
+        Log.d("Latitude", String.valueOf(latitude));
+        Log.d("Longitude", String.valueOf(longitude));
+        point = new GeoPoint(latitude, longitude);
     }
 
     @Override

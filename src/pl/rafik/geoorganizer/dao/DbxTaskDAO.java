@@ -5,8 +5,10 @@ import com.dropbox.sync.android.*;
 import pl.rafik.geoorganizer.dbx.DbxStart;
 import pl.rafik.geoorganizer.model.dto.GeoLocalisation;
 import pl.rafik.geoorganizer.model.entity.TaskEntity;
+import pl.rafik.geoorganizer.util.DateUtil;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import static pl.rafik.geoorganizer.model.entity.TaskOpenHelper.*;
@@ -18,13 +20,12 @@ import static pl.rafik.geoorganizer.model.entity.TaskOpenHelper.*;
 public class DbxTaskDAO implements ITaskDAO {
     private DbxDatastore mDatastore;
     private DbxTable mTable;
-    private String APP_KEY;
-    private String APP_SECRET;
-    private DbxAccountManager dbxAccountManager;
 
     public DbxTaskDAO(Context context) {
-        initialiseDbx(context);
+        DbxStart dbxStart = new DbxStart();
+        mDatastore = dbxStart.getOpenedDatastore();
         mTable = mDatastore.getTable(TABLE_NAME);
+
     }
 
     private DbxFields convertTaskToDbxFields(TaskEntity task) {
@@ -55,6 +56,7 @@ public class DbxTaskDAO implements ITaskDAO {
 
     @Override
     public List<TaskEntity> getAllTasks() throws DbxException {
+        mDatastore.sync();
         List<TaskEntity> taskEntityList = new ArrayList<>();
         for (DbxRecord field : mTable.query().asList()) {
             TaskEntity taskEntity = convertDbxFieldsToTaskEntity(field);
@@ -66,11 +68,13 @@ public class DbxTaskDAO implements ITaskDAO {
 
     @Override
     public TaskEntity getTask(String id) throws DbxException {
+        mDatastore.sync();
         return convertDbxFieldsToTaskEntity(mTable.get(id));
     }
 
     @Override
     public List<TaskEntity> getTasks(GeoLocalisation localisation) throws DbxException {
+        mDatastore.sync();
         List<TaskEntity> taskEntityList = new ArrayList<>();
         DbxFields queryParams = new DbxFields().set(TASK_STATUS, "NOT");
         for (DbxRecord field : mTable.query(queryParams).asList()) {
@@ -82,42 +86,96 @@ public class DbxTaskDAO implements ITaskDAO {
     }
 
     @Override
-    public List<TaskEntity> getFutureTasks() {
-        return null;
+    public List<TaskEntity> getFutureTasks() throws DbxException {
+        List<TaskEntity> allTasks = getActualTasks();
+        List<TaskEntity> results = new ArrayList<>();
+        Calendar c = Calendar.getInstance();
+        for (TaskEntity ent : allTasks) {
+            Calendar tmp = Calendar.getInstance();
+            String dtime[] = ent.getData().split(" ");
+            DateUtil.parseDate(tmp, dtime);
+            if (c.before(tmp))
+                results.add(ent);
+        }
+        return results;
     }
 
     @Override
-    public List<TaskEntity> getPastTasks() {
-        return null;
+    public List<TaskEntity> getPastTasks() throws DbxException {
+        List<TaskEntity> allTasks = getActualTasks();
+        List<TaskEntity> results = new ArrayList<>();
+        Calendar c = Calendar.getInstance();
+        for (TaskEntity ent : allTasks) {
+            Calendar tmp = Calendar.getInstance();
+            String dtime[] = ent.getData().split(" ");
+            DateUtil.parseDate(tmp, dtime);
+            if (!c.before(tmp))
+                results.add(ent);
+        }
+        return results;
     }
 
     @Override
-    public List<TaskEntity> getNotDoneTasks() {
-        return null;
+    public List<TaskEntity> getNotDoneTasks() throws DbxException {
+        mDatastore.sync();
+        List<TaskEntity> taskEntityList = new ArrayList<>();
+        DbxFields queryParams = new DbxFields().set(TASK_STATUS, "NOT");
+        for (DbxRecord field : mTable.query(queryParams).asList()) {
+            TaskEntity taskEntity = convertDbxFieldsToTaskEntity(field);
+            taskEntityList.add(taskEntity);
+        }
+        mDatastore.sync();
+        return taskEntityList;
     }
 
     @Override
-    public List<TaskEntity> getDoneTasks() {
-        return null;
+    public List<TaskEntity> getDoneTasks() throws DbxException {
+        mDatastore.sync();
+        List<TaskEntity> taskEntityList = new ArrayList<>();
+        DbxFields queryParams = new DbxFields().set(TASK_STATUS, "DONE");
+        for (DbxRecord field : mTable.query(queryParams).asList()) {
+            TaskEntity taskEntity = convertDbxFieldsToTaskEntity(field);
+            taskEntityList.add(taskEntity);
+        }
+        mDatastore.sync();
+        return taskEntityList;
     }
 
     @Override
-    public int updateTask(TaskEntity ent) {
-        return 0;
+    public int updateTask(TaskEntity ent) throws DbxException {
+        mDatastore.sync();
+        DbxRecord oldRecord;
+        if (!mTable.get(ent.getId()).isDeleted()) {
+            oldRecord = mTable.get(ent.getId());
+            oldRecord.set(TASK_LONGITUDE, ent.getLongitude());
+            oldRecord.set(TASK_LATITUDE, ent.getLatitude());
+            oldRecord.set(TASK_NOTE, ent.getNote());
+            oldRecord.set(TASK_DATE, ent.getData());
+            oldRecord.set(TASK_PRIORITY, ent.getPriority());
+            oldRecord.set(TASK_STATUS, ent.getStatus());
+            oldRecord.set(TASK_ADDRESS, ent.getLocalistationAddress());
+        } else return -1;
+        mDatastore.sync();
+        return 1;
+
+
     }
 
     @Override
     public int deleteTask(String id) {
-        return 0;
+        return 1;
     }
 
     @Override
-    public TaskEntity getTask(GeoLocalisation localisation) {
-        return null;
+    public TaskEntity getTask(GeoLocalisation localisation) throws DbxException {
+        mDatastore.sync();
+        DbxFields parameters = new DbxFields().set(TASK_ADDRESS, localisation.getLocalistationAddress()).set(TASK_LATITUDE, localisation.getLatitude()).set(TASK_LONGITUDE, localisation.getLongitude());
+        return convertDbxFieldsToTaskEntity(mTable.query(parameters).asList().get(0));
     }
 
     @Override
     public List<TaskEntity> getActualTasks() throws DbxException {
+        mDatastore.sync();
         List<TaskEntity> taskEntityList = new ArrayList<>();
         DbxFields queryParams = new DbxFields().set(TASK_STATUS, "NOT");
         for (DbxRecord field : mTable.query(queryParams).asList()) {
@@ -129,27 +187,25 @@ public class DbxTaskDAO implements ITaskDAO {
     }
 
     @Override
-    public int makeDone(String id) {
-        return 0;
+    public int makeDone(String id) throws DbxException {
+        mDatastore.sync();
+        if (!mTable.get(id).isDeleted())
+            mTable.get(id).set(TASK_STATUS, "DONE");
+        else return -1;
+        mDatastore.sync();
+        return 1;
+
     }
 
     @Override
-    public int makeNotDone(String id) {
-        return 0;
+    public int makeNotDone(String id) throws DbxException {
+        mDatastore.sync();
+        if (!mTable.get(id).isDeleted())
+            mTable.get(id).set(TASK_STATUS, "NOT");
+        else return -1;
+        mDatastore.sync();
+        return 1;
     }
 
-    private void initialiseDbx(Context context) {
-        if (null == mDatastore) {
-            try {
-                if (!DbxStart.dbxDatastore.isOpen())
-                    mDatastore = DbxDatastore.openDefault(DbxStart.dbxAccountManager.getLinkedAccount());
-                else {
-                    mDatastore = DbxStart.dbxDatastore;
-                }
-                mDatastore.sync();
-            } catch (DbxException e) {
-                e.printStackTrace();
-            }
-        }
-    }
+
 }

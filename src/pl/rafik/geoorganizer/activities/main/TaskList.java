@@ -46,6 +46,19 @@ public class TaskList extends ListActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initialiseServices();
+        updateDate = "";
+        setListAdapter(adapter);
+        registerForContextMenu(this.getListView());
+        if (adapter.isEmpty()) {
+            Toast.makeText(this,
+                    "Lista aktualnych zadan do wykonania jest pusta!",
+                    Toast.LENGTH_LONG).show();
+        }
+
+    }
+
+    private void initialiseServices() {
         taskService = new TaskService(TaskList.this);
         proximityService = new ProximityAlertService(this);
         try {
@@ -55,17 +68,8 @@ public class TaskList extends ListActivity {
         } catch (DbxException e) {
             e.printStackTrace();
         }
-        updateDate = "";
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         fragmentManager = this.getFragmentManager();
-        setListAdapter(adapter);
-        registerForContextMenu(this.getListView());
-        if (adapter.isEmpty()) {
-            Toast.makeText(this,
-                    "Lista aktualnych zadan do wykonania jest pusta!",
-                    Toast.LENGTH_LONG).show();
-        }
-
     }
 
     @Override
@@ -290,8 +294,12 @@ public class TaskList extends ListActivity {
 
         if (resultCode == RESULT_OK) {
 
-            adapter = new TaskArrayAdapter(TaskList.this,
-                    taskService.getNotDoneTasks());
+            try {
+                adapter = new TaskArrayAdapter(TaskList.this,
+                        taskService.getNotDoneTasks());
+            } catch (DbxException e) {
+                e.printStackTrace();
+            }
             setListAdapter(adapter);
 
         }
@@ -324,8 +332,12 @@ public class TaskList extends ListActivity {
                 return true;
             }
             case R.id.mn_doneSort: {
-                adapter = new TaskArrayAdapter(TaskList.this,
-                        taskService.getDoneTasks());
+                try {
+                    adapter = new TaskArrayAdapter(TaskList.this,
+                            taskService.getDoneTasks());
+                } catch (DbxException e) {
+                    e.printStackTrace();
+                }
                 this.setListAdapter(adapter);
                 if (adapter.isEmpty())
                     Toast.makeText(TaskList.this,
@@ -334,8 +346,12 @@ public class TaskList extends ListActivity {
                 return true;
             }
             case R.id.mn_notActualTasks: {
-                adapter = new TaskArrayAdapter(TaskList.this,
-                        taskService.getPastTasks());
+                try {
+                    adapter = new TaskArrayAdapter(TaskList.this,
+                            taskService.getPastTasks());
+                } catch (DbxException e) {
+                    e.printStackTrace();
+                }
                 this.setListAdapter(adapter);
                 if (adapter.isEmpty())
                     Toast.makeText(TaskList.this,
@@ -344,8 +360,12 @@ public class TaskList extends ListActivity {
                 return true;
             }
             case R.id.mn_notDoneSort: {
-                adapter = new TaskArrayAdapter(TaskList.this,
-                        taskService.getNotDoneTasks());
+                try {
+                    adapter = new TaskArrayAdapter(TaskList.this,
+                            taskService.getNotDoneTasks());
+                } catch (DbxException e) {
+                    e.printStackTrace();
+                }
                 this.setListAdapter(adapter);
                 if (adapter.isEmpty())
                     Toast.makeText(TaskList.this,
@@ -415,8 +435,8 @@ public class TaskList extends ListActivity {
             updateDate = String.valueOf(dayOfMonth) + "-"
                     + String.valueOf(monthOfYear) + "-" + String.valueOf(year);
             dto.setDate(updateDate);
-            taskService.updateTask(dto);
             try {
+                taskService.updateTask(dto);
                 taskService.makeNotDone(dto.getId());
             } catch (DbxException e) {
                 e.printStackTrace();

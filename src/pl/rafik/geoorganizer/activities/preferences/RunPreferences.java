@@ -2,6 +2,7 @@ package pl.rafik.geoorganizer.activities.preferences;
 
 import java.util.List;
 
+import com.dropbox.sync.android.DbxException;
 import pl.rafik.geoorganizer.model.dto.TaskDTO;
 import pl.rafik.geoorganizer.services.IProximityAlertService;
 import pl.rafik.geoorganizer.services.ITaskService;
@@ -27,7 +28,12 @@ public class RunPreferences extends Activity {
 				.commit();
 		IProximityAlertService proxiService = new ProximityAlertService(this);
 		ITaskService taskService = new TaskService(this);
-		List<TaskDTO> list = taskService.getNotDoneTasks();
-		proxiService.actualizeProximities(list);
+        List<TaskDTO> list = null;
+        try {
+            list = taskService.getNotDoneTasks();
+        } catch (DbxException e) {
+            e.printStackTrace();
+        }
+        proxiService.actualizeProximities(list);
 	}
 }
