@@ -21,12 +21,15 @@ import pl.rafik.geoorganizer.R;
 import pl.rafik.geoorganizer.activities.map.ShowOnMap;
 import pl.rafik.geoorganizer.model.dto.GeoLocalisation;
 import pl.rafik.geoorganizer.model.dto.TaskDTO;
+import pl.rafik.geoorganizer.model.entity.TaskOpenHelper;
 import pl.rafik.geoorganizer.services.impl.LocalisationService;
 import pl.rafik.geoorganizer.services.impl.MyBestLocation;
 import pl.rafik.geoorganizer.services.impl.MyBestLocation.LocationResult;
 import pl.rafik.geoorganizer.services.impl.TaskService;
 
 import java.util.Calendar;
+
+import static pl.rafik.geoorganizer.model.entity.TaskOpenHelper.*;
 
 /**
  * Edycja tasku.
@@ -216,12 +219,12 @@ public class EditTask extends Activity {
                 || !placeName.getText().toString().isEmpty()) {
             taskDTO.setNote(taskName.getText().toString());
             taskDTO.setDate(dedline.getText().toString());
-            taskDTO.setStatus("NOT");
+            taskDTO.setStatus(NOT_DONE);
             if (!addr.equals("")) {
                 GeoLocalisation geo = new GeoLocalisation();
                 if (address != null) {
-                    geo.setLatitude(String.valueOf(address.getLatitude() * 1000000));
-                    geo.setLongitude(String.valueOf(address.getLongitude() * 1000000));
+                    geo.setLatitude(String.valueOf(address.getLatitude()));
+                    geo.setLongitude(String.valueOf(address.getLongitude()));
 
                     geo.setLocalistationAddress(addr);
                 } else {

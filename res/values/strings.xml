@@ -38,7 +38,7 @@
     <string name="set_proxi_Title">Ustaw Zasięg Powiadomień</string>
     <string name="help_txt">Aplikacja pozwalająca na dodawanie zadań przyporządkowanych do miejsca ich wykonania. Zadania te posiadają również czas ważności do którego czasu przypomnienie będzie aktywne.
         funkcja przypominająca będzie uruchamiała się w pobliżu miejsca dodania. Zakres przypomnień tzn promień obszaru objętego przypomnieniem można ustawić w ustawieniach aplikacji.
-        Forma przypomnienia również jest ustawiana w aplikacji. Uwagi odnośnie działania apliacki proszę kierować na email: </string>
+        Forma przypomnienia również jest ustawiana w aplikacji. Uwagi odnośnie działania apliacji proszę kierować na email: </string>
     <string name="tv_email">rafik991@gmail.com</string>
     <string name="alerts_desc_cat">USTAWIENIA WIBRACJI</string>
     <string name="vibration_variants">Metody powiadamiania wibracyjnego</string>

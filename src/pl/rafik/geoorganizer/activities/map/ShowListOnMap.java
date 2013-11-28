@@ -3,18 +3,14 @@ package pl.rafik.geoorganizer.activities.map;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import com.dropbox.sync.android.DbxException;
-import com.google.android.gms.maps.CameraUpdate;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.maps.GeoPoint;
 import com.google.android.maps.OverlayItem;
 import pl.rafik.geoorganizer.R;
-import pl.rafik.geoorganizer.model.dto.GeoLocalisation;
 import pl.rafik.geoorganizer.model.dto.TaskDTO;
 import pl.rafik.geoorganizer.services.impl.TaskService;
+import pl.rafik.geoorganizer.util.MapUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,11 +21,12 @@ import java.util.List;
  * @author rafal.machnik
  */
 public class ShowListOnMap extends FragmentActivity {
-    private GeoPoint[] points;
+    private LatLng[] points;
     private OverlayItem items[];
     private GoogleMap mv;
     private TaskService taskService;
     private List<TaskDTO> tasks;
+    private MapUtil mapUtil = new MapUtil();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -37,7 +34,7 @@ public class ShowListOnMap extends FragmentActivity {
         setContentView(R.layout.map_list_items);
         initialiseServices();
         initialiseContent();
-        setMapCenter(mv, points);
+        mapUtil.setMapCenter(mv, points);
 
     }
 
@@ -47,7 +44,7 @@ public class ShowListOnMap extends FragmentActivity {
         mv = ((MapFragment) getFragmentManager().findFragmentById(
                 R.id.mapView)).getMap();
         String[] ids = bundle.getStringArray("IDS");
-        points = new GeoPoint[ids.length];
+        points = new LatLng[ids.length];
         for (int i = 0; i < ids.length; i++) {
             TaskDTO dto = null;
             try {
@@ -59,8 +56,8 @@ public class ShowListOnMap extends FragmentActivity {
 //					.getLatitude()))));
 //			Log.d("Longitude",String.valueOf((Integer.parseInt(dto.getLocalisation()
 //					.getLongitude()))));
-            points[i] = new GeoPoint(Integer.parseInt(dto.getLocalisation()
-                    .getLatitude()), Integer.parseInt(dto.getLocalisation()
+            points[i] = new LatLng(Double.parseDouble(dto.getLocalisation()
+                    .getLatitude()), Double.parseDouble(dto.getLocalisation()
                     .getLongitude()));
             tasks.add(dto);
         }
@@ -72,23 +69,5 @@ public class ShowListOnMap extends FragmentActivity {
         tasks = new ArrayList<TaskDTO>();
     }
 
-    public void setMapCenter(GoogleMap mv, GeoPoint[] points) {
-        List<Integer> latitude = new ArrayList<Integer>();
-        List<Integer> longitude = new ArrayList<Integer>();
 
-        for (int i = 0; i < points.length; i++) {
-            GeoLocalisation geo = new GeoLocalisation();
-            geo.setLatitude(String.valueOf(points[i].getLatitudeE6()));
-            geo.setLongitude(String.valueOf(points[i].getLongitudeE6()));
-            mv.addMarker(new MarkerOptions()
-                    .position(new LatLng(points[i].getLatitudeE6(), points[i].getLongitudeE6()))
-                    .title(geo.getLocalistationAddress()));
-            latitude.add(points[i].getLatitudeE6());
-            longitude.add(points[i].getLongitudeE6());
-            LatLng coordinate = new LatLng(points[i].getLatitudeE6(), points[i].getLongitudeE6());
-            CameraUpdate yourLocation = CameraUpdateFactory.newLatLngZoom(coordinate, 5);
-            mv.animateCamera(yourLocation);
-        }
-
-    }
 }

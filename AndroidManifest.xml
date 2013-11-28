@@ -86,7 +86,7 @@
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
-        <activity android:name=".dbx.DbxStart"></activity>
+        <activity android:name=".activities.dbx.DbxStart"></activity>
 
         <service
                 android:name="com.dropbox.sync.android.DbxSyncService"

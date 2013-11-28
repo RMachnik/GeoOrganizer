@@ -14,17 +14,13 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-import com.google.android.gms.maps.CameraUpdate;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.maps.GeoPoint;
 import com.google.android.maps.Overlay;
 import pl.rafik.geoorganizer.R;
 import pl.rafik.geoorganizer.services.impl.LocalisationService;
+import pl.rafik.geoorganizer.util.MapUtil;
 
 import java.util.List;
 
@@ -36,9 +32,9 @@ import java.util.List;
  */
 public class ShowOnMap extends FragmentActivity {
 
-    int latitude;
-    int longitude;
-    private GeoPoint point;
+    double latitude;
+    double longitude;
+    private LatLng point;
     private GoogleMap mv;
     private Button zatwierdz;
     private EditText searchEdt;
@@ -51,6 +47,7 @@ public class ShowOnMap extends FragmentActivity {
     private CustomItemizedOverlay itemizedOverlay;
     private List<Overlay> listOverlays;
     private GoogleMap googleMap;
+    private MapUtil mapUtil = new MapUtil();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,7 +58,7 @@ public class ShowOnMap extends FragmentActivity {
         handler = new RefreshHandler();
         service = new LocalisationService(handler, this);
         initialiseMap(bundle);
-        setMapCenter(mv, point);
+        mapUtil.setMapCenter(mv, point, addr);
         initialiseButtons();
     }
 
@@ -125,27 +122,17 @@ public class ShowOnMap extends FragmentActivity {
                 R.id.map)).getMap();
         mv.setMyLocationEnabled(true);
         mv.getUiSettings().setMyLocationButtonEnabled(true);
-        latitude = (int) (bundle.getDouble("Latitude") * 1000000);
-        longitude = (int) (bundle.getDouble("Longitude") * 1000000);
+        latitude = (bundle.getDouble("Latitude"));
+        longitude = (bundle.getDouble("Longitude"));
         Log.d("Latitude", String.valueOf(latitude));
         Log.d("Longitude", String.valueOf(longitude));
-        point = new GeoPoint(latitude, longitude);
+        point = new LatLng(latitude, longitude);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.map, menu);
         return true;
-    }
-
-    public void setMapCenter(GoogleMap mv, GeoPoint point) {
-        Marker marker = mv.addMarker(new MarkerOptions()
-                .position(new LatLng(point.getLatitudeE6(), point.getLongitudeE6()))
-                .title(addr));
-        LatLng coordinate = new LatLng(point.getLatitudeE6(), point.getLongitudeE6());
-        CameraUpdate yourLocation = CameraUpdateFactory.newLatLngZoom(coordinate, 5);
-        mv.animateCamera(yourLocation);
-
     }
 
     private void initilizeMap() {
@@ -195,12 +182,12 @@ public class ShowOnMap extends FragmentActivity {
                             addr += a
                                     .getAddressLine(a.getMaxAddressLineIndex() - 1);
                             Log.d("fullAddress", addr);
-                            latitude = (int) (address.getLatitude() * 1000000);
-                            longitude = (int) (address.getLongitude() * 1000000);
-                            GeoPoint nPoint = new GeoPoint(
-                                    (int) (address.getLatitude() * 1000000),
-                                    (int) (address.getLongitude() * 1000000));
-                            setMapCenter(mv, nPoint);
+                            latitude = (address.getLatitude());
+                            longitude = (address.getLongitude());
+                            LatLng nPoint = new LatLng(
+                                    (address.getLatitude()),
+                                    (address.getLongitude()));
+                            mapUtil.setMapCenter(mv, nPoint, addr);
 
                         }
                     }
@@ -222,13 +209,13 @@ public class ShowOnMap extends FragmentActivity {
                             addr += a
                                     .getAddressLine(a.getMaxAddressLineIndex() - 1);
                             Log.d("fullAddress", addr);
-                            latitude = (int) (address.getLatitude() * 1000000);
-                            longitude = (int) (address.getLongitude() * 1000000);
-                            GeoPoint nPoint = new GeoPoint(
-                                    (int) (address.getLatitude() * 1000000),
-                                    (int) (address.getLongitude() * 1000000));
+                            latitude = (address.getLatitude());
+                            longitude = (address.getLongitude());
+                            LatLng nPoint = new LatLng(
+                                    (address.getLatitude()),
+                                    (address.getLongitude()));
                             searchEdt.setText(addr);
-                            setMapCenter(mv, nPoint);
+                            mapUtil.setMapCenter(mv, nPoint, addr);
                         }
                         return;
                     }

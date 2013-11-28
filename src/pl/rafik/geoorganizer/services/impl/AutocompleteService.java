@@ -21,7 +21,7 @@ public class AutocompleteService {
 	private static final String TYPE_AUTOCOMPLETE = "/autocomplete";
 	private static final String OUT_JSON = "/json";
 
-	private static final String API_KEY = "0MjxhJW_W5JRPM_cpGcbM8FETXIhrGkZh9thR3g";
+	private static final String API_KEY = "AIzaSyDxKhBIbud4uet3k5zKgqnp26T1BstBp7s";
 
 	public ArrayList<String> autocomplete(String input) {
 		ArrayList<String> resultList = null;

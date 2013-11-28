@@ -1,4 +1,4 @@
-package pl.rafik.geoorganizer.dao;
+package pl.rafik.geoorganizer.dao.impl;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import com.dropbox.sync.android.DbxException;
+import pl.rafik.geoorganizer.dao.ITaskDAO;
 import pl.rafik.geoorganizer.model.dto.GeoLocalisation;
 import pl.rafik.geoorganizer.model.entity.TaskEntity;
 import pl.rafik.geoorganizer.model.entity.TaskOpenHelper;
@@ -27,13 +28,7 @@ public class TaskDAO extends TaskOpenHelper implements ITaskDAO {
         SQLiteDatabase db = this.getWritableDatabase();
         try {
             ContentValues content = new ContentValues();
-            content.put(TASK_ADDRESS, task.getLocalistationAddress());
-            content.put(TASK_DATE, task.getData());
-            content.put(TASK_LATITUDE, task.getLatitude().getBytes());
-            content.put(TASK_LONGITUDE, task.getLongitude().getBytes());
-            content.put(TASK_NOTE, task.getNote());
-            content.put(TASK_PRIORITY, task.getPriority());
-            content.put(TASK_STATUS, task.getStatus());
+            putTaskInContent(task, content);
 
             return String.valueOf(db.insert(TABLE_NAME, null, content));
         } finally {
@@ -118,18 +113,7 @@ public class TaskDAO extends TaskOpenHelper implements ITaskDAO {
                         && cur.getBlob(cur.getColumnIndex(TASK_LONGITUDE))
                         .equals(localisation.getLongitude())) {
                     TaskEntity ent = new TaskEntity();
-                    ent.setId(String.valueOf(cur.getLong(cur.getColumnIndex(ID))));
-                    ent.setLatitude(cur.getString(cur
-                            .getColumnIndex(TASK_LATITUDE)));
-                    ent.setLatitude(new String(cur.getBlob(cur
-                            .getColumnIndex(TASK_LATITUDE))));
-                    ent.setLongitude(new String(cur.getBlob(cur
-                            .getColumnIndex(TASK_LONGITUDE))));
-                    ent.setData(cur.getString(cur.getColumnIndex(TASK_DATE)));
-                    ent.setNote(cur.getString(cur.getColumnIndex(TASK_NOTE)));
-                    ent.setPriority(cur.getString(cur
-                            .getColumnIndex(TASK_PRIORITY)));
-                    ent.setStatus(cur.getString(cur.getColumnIndex(TASK_STATUS)));
+                    populateTaskEntityFromCursor(cur, ent);
                     return ent;
                 } else
                     return null;
@@ -149,7 +133,7 @@ public class TaskDAO extends TaskOpenHelper implements ITaskDAO {
                 + "=?";
         try {
 
-            Cursor cur = db.rawQuery(sql, new String[]{"NOT"});
+            Cursor cur = db.rawQuery(sql, new String[]{NOT_DONE});
             Log.d("LISTA", String.valueOf(cur.getCount()));
             if (cur.moveToFirst()) {
                 do {
@@ -172,7 +156,7 @@ public class TaskDAO extends TaskOpenHelper implements ITaskDAO {
         String sql = "select * from " + TABLE_NAME + " where " + TASK_STATUS
                 + "=?";
         try {
-            Cursor cur = db.rawQuery(sql, new String[]{"DONE"});
+            Cursor cur = db.rawQuery(sql, new String[]{DONE});
             if (cur.moveToFirst()) {
                 do {
                     TaskEntity ent = new TaskEntity();
@@ -243,13 +227,7 @@ public class TaskDAO extends TaskOpenHelper implements ITaskDAO {
         SQLiteDatabase db = this.getWritableDatabase();
         try {
             ContentValues content = new ContentValues();
-            content.put(TASK_ADDRESS, task.getLocalistationAddress());
-            content.put(TASK_DATE, task.getData());
-            content.put(TASK_LATITUDE, task.getLatitude().getBytes());
-            content.put(TASK_LONGITUDE, task.getLongitude().getBytes());
-            content.put(TASK_NOTE, task.getNote());
-            content.put(TASK_PRIORITY, task.getPriority());
-            content.put(TASK_STATUS, task.getStatus());
+            putTaskInContent(task, content);
             Log.d("id", String.valueOf(task.getId()));
             return db.update(TABLE_NAME, content, ID + "=?",
                     new String[]{String.valueOf(task.getId())});
@@ -288,7 +266,7 @@ public class TaskDAO extends TaskOpenHelper implements ITaskDAO {
     @Override
     public int makeDone(String id) throws DbxException {
         TaskEntity ent = this.getTask(id);
-        ent.setStatus("DONE");
+        ent.setStatus(DONE);
         return this.updateTask(ent);
 
     }
@@ -296,7 +274,7 @@ public class TaskDAO extends TaskOpenHelper implements ITaskDAO {
     @Override
     public int makeNotDone(String id) throws DbxException {
         TaskEntity ent = this.getTask(id);
-        ent.setStatus("NOT");
+        ent.setStatus(NOT_DONE);
         return this.updateTask(ent);
     }
 
@@ -320,6 +298,16 @@ public class TaskDAO extends TaskOpenHelper implements ITaskDAO {
         }
     }
 
+    private void putTaskInContent(TaskEntity task, ContentValues content) {
+        content.put(TASK_ADDRESS, task.getLocalistationAddress());
+        content.put(TASK_DATE, task.getData());
+        content.put(TASK_LATITUDE, task.getLatitude().getBytes());
+        content.put(TASK_LONGITUDE, task.getLongitude().getBytes());
+        content.put(TASK_NOTE, task.getNote());
+        content.put(TASK_PRIORITY, task.getPriority());
+        content.put(TASK_STATUS, task.getStatus());
+    }
+
     private void convertToEntity(String id, Cursor cur, TaskEntity ent) {
         ent.setId(id);
         ent.setLatitude(new String(cur.getBlob(cur
@@ -331,6 +319,21 @@ public class TaskDAO extends TaskOpenHelper implements ITaskDAO {
         ent.setData(cur.getString(cur.getColumnIndex(TASK_DATE)));
         ent.setNote(cur.getString(cur.getColumnIndex(TASK_NOTE)));
         ent.setPriority(cur.getString(cur.getColumnIndex(TASK_PRIORITY)));
+        ent.setStatus(cur.getString(cur.getColumnIndex(TASK_STATUS)));
+    }
+
+    private void populateTaskEntityFromCursor(Cursor cur, TaskEntity ent) {
+        ent.setId(String.valueOf(cur.getLong(cur.getColumnIndex(ID))));
+        ent.setLatitude(cur.getString(cur
+                .getColumnIndex(TASK_LATITUDE)));
+        ent.setLatitude(new String(cur.getBlob(cur
+                .getColumnIndex(TASK_LATITUDE))));
+        ent.setLongitude(new String(cur.getBlob(cur
+                .getColumnIndex(TASK_LONGITUDE))));
+        ent.setData(cur.getString(cur.getColumnIndex(TASK_DATE)));
+        ent.setNote(cur.getString(cur.getColumnIndex(TASK_NOTE)));
+        ent.setPriority(cur.getString(cur
+                .getColumnIndex(TASK_PRIORITY)));
         ent.setStatus(cur.getString(cur.getColumnIndex(TASK_STATUS)));
     }
 

@@ -1,4 +1,4 @@
-package pl.rafik.geoorganizer.dbx;
+package pl.rafik.geoorganizer.activities.dbx;
 
 import android.app.Activity;
 import android.content.Context;

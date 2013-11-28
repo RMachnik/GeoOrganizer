@@ -2,7 +2,7 @@ package pl.rafik.geoorganizer.services.impl;
 
 import android.content.Context;
 import com.dropbox.sync.android.DbxException;
-import pl.rafik.geoorganizer.dao.DbxTaskDAO;
+import pl.rafik.geoorganizer.dao.impl.DbxTaskDAO;
 import pl.rafik.geoorganizer.dao.ITaskDAO;
 import pl.rafik.geoorganizer.model.dto.GeoLocalisation;
 import pl.rafik.geoorganizer.model.dto.TaskDTO;

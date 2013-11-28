@@ -1,8 +1,9 @@
-package pl.rafik.geoorganizer.dao;
+package pl.rafik.geoorganizer.dao.impl;
 
 import android.content.Context;
 import com.dropbox.sync.android.*;
-import pl.rafik.geoorganizer.dbx.DbxStart;
+import pl.rafik.geoorganizer.dao.ITaskDAO;
+import pl.rafik.geoorganizer.activities.dbx.DbxStart;
 import pl.rafik.geoorganizer.model.dto.GeoLocalisation;
 import pl.rafik.geoorganizer.model.entity.TaskEntity;
 import pl.rafik.geoorganizer.util.DateUtil;
@@ -31,19 +32,6 @@ public class DbxTaskDAO implements ITaskDAO {
     private DbxFields convertTaskToDbxFields(TaskEntity task) {
         DbxFields taskFields = new DbxFields().set(TASK_NOTE, task.getNote()).set(TASK_ADDRESS, task.getLocalistationAddress()).set(TASK_DATE, task.getData()).set(TASK_LATITUDE, task.getLatitude()).set(TASK_LONGITUDE, task.getLongitude()).set(TASK_PRIORITY, task.getPriority()).set(TASK_STATUS, task.getStatus());
         return taskFields;
-    }
-
-    private TaskEntity convertDbxFieldsToTaskEntity(DbxRecord dbxFields) {
-        TaskEntity taskEntity = new TaskEntity();
-        taskEntity.setData(dbxFields.getString(TASK_DATE));
-        taskEntity.setLatitude(dbxFields.getString(TASK_LATITUDE));
-        taskEntity.setLocalistationAddress(dbxFields.getString(TASK_ADDRESS));
-        taskEntity.setLongitude(dbxFields.getString(TASK_LONGITUDE));
-        taskEntity.setNote(dbxFields.getString(TASK_NOTE));
-        taskEntity.setStatus(dbxFields.getString(TASK_STATUS));
-        taskEntity.setPriority(dbxFields.getString(TASK_PRIORITY));
-        taskEntity.setId(dbxFields.getId());
-        return taskEntity;
     }
 
     @Override
@@ -147,13 +135,7 @@ public class DbxTaskDAO implements ITaskDAO {
         DbxRecord oldRecord;
         if (!mTable.get(ent.getId()).isDeleted()) {
             oldRecord = mTable.get(ent.getId());
-            oldRecord.set(TASK_LONGITUDE, ent.getLongitude());
-            oldRecord.set(TASK_LATITUDE, ent.getLatitude());
-            oldRecord.set(TASK_NOTE, ent.getNote());
-            oldRecord.set(TASK_DATE, ent.getData());
-            oldRecord.set(TASK_PRIORITY, ent.getPriority());
-            oldRecord.set(TASK_STATUS, ent.getStatus());
-            oldRecord.set(TASK_ADDRESS, ent.getLocalistationAddress());
+            updateRecord(ent, oldRecord);
         } else return -1;
         mDatastore.sync();
         return 1;
@@ -190,7 +172,7 @@ public class DbxTaskDAO implements ITaskDAO {
     public int makeDone(String id) throws DbxException {
         mDatastore.sync();
         if (!mTable.get(id).isDeleted())
-            mTable.get(id).set(TASK_STATUS, "DONE");
+            mTable.get(id).set(TASK_STATUS, DONE);
         else return -1;
         mDatastore.sync();
         return 1;
@@ -201,11 +183,32 @@ public class DbxTaskDAO implements ITaskDAO {
     public int makeNotDone(String id) throws DbxException {
         mDatastore.sync();
         if (!mTable.get(id).isDeleted())
-            mTable.get(id).set(TASK_STATUS, "NOT");
+            mTable.get(id).set(TASK_STATUS, NOT_DONE);
         else return -1;
         mDatastore.sync();
         return 1;
     }
 
+    private TaskEntity convertDbxFieldsToTaskEntity(DbxRecord dbxFields) {
+        TaskEntity taskEntity = new TaskEntity();
+        taskEntity.setData(dbxFields.getString(TASK_DATE));
+        taskEntity.setLatitude(dbxFields.getString(TASK_LATITUDE));
+        taskEntity.setLocalistationAddress(dbxFields.getString(TASK_ADDRESS));
+        taskEntity.setLongitude(dbxFields.getString(TASK_LONGITUDE));
+        taskEntity.setNote(dbxFields.getString(TASK_NOTE));
+        taskEntity.setStatus(dbxFields.getString(TASK_STATUS));
+        taskEntity.setPriority(dbxFields.getString(TASK_PRIORITY));
+        taskEntity.setId(dbxFields.getId());
+        return taskEntity;
+    }
 
+    private void updateRecord(TaskEntity ent, DbxRecord oldRecord) {
+        oldRecord.set(TASK_LONGITUDE, ent.getLongitude());
+        oldRecord.set(TASK_LATITUDE, ent.getLatitude());
+        oldRecord.set(TASK_NOTE, ent.getNote());
+        oldRecord.set(TASK_DATE, ent.getData());
+        oldRecord.set(TASK_PRIORITY, ent.getPriority());
+        oldRecord.set(TASK_STATUS, ent.getStatus());
+        oldRecord.set(TASK_ADDRESS, ent.getLocalistationAddress());
+    }
 }

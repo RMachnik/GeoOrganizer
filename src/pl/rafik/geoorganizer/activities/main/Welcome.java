@@ -13,7 +13,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import pl.rafik.geoorganizer.R;
 import pl.rafik.geoorganizer.activities.preferences.RunPreferences;
-import pl.rafik.geoorganizer.dbx.DbxStart;
+import pl.rafik.geoorganizer.activities.dbx.DbxStart;
 
 /**
  * Klasa aktywnosci poczatkowej dla aplikacji.

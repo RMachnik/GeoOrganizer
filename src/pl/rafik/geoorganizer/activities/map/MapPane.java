@@ -13,6 +13,10 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import pl.rafik.geoorganizer.R;
 
+/**
+ * Klasa testujaca nowe mapy v2
+ */
+
 public class MapPane extends Activity {
 
     // Google Map
