@@ -1,7 +1,6 @@
 package pl.rafik.geoorganizer.activities.map;
 
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,12 +16,9 @@ import android.widget.Toast;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.maps.Overlay;
 import pl.rafik.geoorganizer.R;
 import pl.rafik.geoorganizer.services.impl.LocalisationService;
 import pl.rafik.geoorganizer.util.MapUtil;
-
-import java.util.List;
 
 /**
  * Klasa przygotowana do pokazywania na mapie punkty ktory zostal wprowadzony
@@ -43,9 +39,6 @@ public class ShowOnMap extends FragmentActivity {
     private LocalisationService service;
     private Address address;
     private String addr = "";
-    private Drawable icon;
-    private CustomItemizedOverlay itemizedOverlay;
-    private List<Overlay> listOverlays;
     private GoogleMap googleMap;
     private MapUtil mapUtil = new MapUtil();
 
@@ -222,7 +215,6 @@ public class ShowOnMap extends FragmentActivity {
                 }
                 case 3: {
                     Log.d("handler", "from map change desc");
-                    searchEdt.setText(itemizedOverlay.getDescription());
                     return;
                 }
             }

@@ -6,7 +6,6 @@ import com.dropbox.sync.android.DbxException;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.maps.OverlayItem;
 import pl.rafik.geoorganizer.R;
 import pl.rafik.geoorganizer.model.dto.TaskDTO;
 import pl.rafik.geoorganizer.services.impl.TaskService;
@@ -22,7 +21,6 @@ import java.util.List;
  */
 public class ShowListOnMap extends FragmentActivity {
     private LatLng[] points;
-    private OverlayItem items[];
     private GoogleMap mv;
     private TaskService taskService;
     private List<TaskDTO> tasks;
@@ -61,7 +59,7 @@ public class ShowListOnMap extends FragmentActivity {
                     .getLongitude()));
             tasks.add(dto);
         }
-        items = new OverlayItem[points.length];
+
     }
 
     private void initialiseServices() {

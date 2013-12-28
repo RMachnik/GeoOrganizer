@@ -21,7 +21,6 @@ import pl.rafik.geoorganizer.R;
 import pl.rafik.geoorganizer.activities.map.ShowOnMap;
 import pl.rafik.geoorganizer.model.dto.GeoLocalisation;
 import pl.rafik.geoorganizer.model.dto.TaskDTO;
-import pl.rafik.geoorganizer.model.entity.TaskOpenHelper;
 import pl.rafik.geoorganizer.services.impl.LocalisationService;
 import pl.rafik.geoorganizer.services.impl.MyBestLocation;
 import pl.rafik.geoorganizer.services.impl.MyBestLocation.LocationResult;
@@ -29,7 +28,7 @@ import pl.rafik.geoorganizer.services.impl.TaskService;
 
 import java.util.Calendar;
 
-import static pl.rafik.geoorganizer.model.entity.TaskOpenHelper.*;
+import static pl.rafik.geoorganizer.model.entity.TaskOpenHelper.NOT_DONE;
 
 /**
  * Edycja tasku.
@@ -55,6 +54,7 @@ public class EditTask extends Activity {
     private Vibrator vibrator;
     private FragmentManager fragmentManager;
     private TextView edtTime;
+    private MyBestLocation bestLocation;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -155,7 +155,7 @@ public class EditTask extends Activity {
                             EditTask.this.startActivity(mapIntent);
                         }
                     };
-                    MyBestLocation bestLocation = new MyBestLocation();
+                    bestLocation = new MyBestLocation();
                     if (bestLocation.getLocation(EditTask.this, locationResult)) {
                         locationResult.gotLocation(location);
                     }

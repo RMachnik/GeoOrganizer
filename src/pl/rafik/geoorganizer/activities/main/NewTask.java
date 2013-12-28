@@ -54,6 +54,7 @@ public class NewTask extends Activity {
     private FragmentManager fragmentManager;
     private EditText edtTime;
     private IProximityAlertService proximityService;
+    private MyBestLocation bestLocation;
 
     // private AutocompleteService autoService;
 
@@ -140,7 +141,7 @@ public class NewTask extends Activity {
                             }
                         }
                     };
-                    MyBestLocation bestLocation = new MyBestLocation();
+                    bestLocation = new MyBestLocation();
                     if (bestLocation.getLocation(NewTask.this, locationResult)) {
                         locationResult.gotLocation(location);
                     }

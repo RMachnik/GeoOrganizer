@@ -68,8 +68,7 @@
 
         <activity android:name=".activities.main.ShowDetails">
         </activity>
-        <activity android:name=".activities.map.ShowOnMap">
-        </activity>
+
         <activity android:name=".activities.map.MapPane">
 
         </activity>
