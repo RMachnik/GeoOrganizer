@@ -44,7 +44,7 @@
     <string name="vibration_variants">Metody powiadamiania wibracyjnego</string>
     <string name="set_vibration_type">Ustaw rodzaj wibracji</string>
     <string name="set_vibration_repeat">Ustaw powtarzanie wibracji</string>
-    <string name="vibration_repeatintg">Ilość powtórzeń alarmu wibracyjnego</string>
+    <string name="vibration_repetition">Ilość powtórzeń alarmu wibracyjnego</string>
     <string name="mn_showAllOnMap">Pokaż zadania na mapie</string>
     <string name="alert_sound_cat">Ustaw dźwięk powiadomień</string>
     <string name="sound_pref">Ustawienia dźwięku</string>

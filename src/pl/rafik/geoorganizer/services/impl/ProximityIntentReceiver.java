@@ -18,6 +18,7 @@ import android.util.Log;
 import com.dropbox.sync.android.DbxException;
 import pl.rafik.geoorganizer.R;
 import pl.rafik.geoorganizer.activities.main.ShowDetails;
+import pl.rafik.geoorganizer.activities.preferences.GeoOrganizerPreferences;
 import pl.rafik.geoorganizer.model.dto.TaskDTO;
 import pl.rafik.geoorganizer.model.entity.TaskOpenHelper;
 import pl.rafik.geoorganizer.services.ITaskService;
@@ -124,10 +125,10 @@ public class ProximityIntentReceiver extends BroadcastReceiver {
     private void initialiseVibration(Context context) {
         sharedPreferences = PreferenceManager
                 .getDefaultSharedPreferences(context);
-        vmodel = sharedPreferences.getString("vibration_value", "200,200").split(",");
-        repeat = sharedPreferences.getString("vibration_repeat", "2");
-        sound = sharedPreferences.getBoolean("sound_pref_checkbox", false);
-        soundUri = sharedPreferences.getString("chose_sound", "");
+        vmodel = sharedPreferences.getString(GeoOrganizerPreferences.VIBRATION_VALUE, "200,200").split(",");
+        repeat = sharedPreferences.getString(GeoOrganizerPreferences.VIBRATION_REPEAT, "2");
+        sound = sharedPreferences.getBoolean(GeoOrganizerPreferences.SOUND_PREF_CHECK, false);
+        soundUri = sharedPreferences.getString(GeoOrganizerPreferences.CHOSEN_SOUND, "");
     }
 
 }

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"  android:layout_height="fill_parent" android:layout_width="fill_parent">
 
     <PreferenceCategory android:title="@string/proxi_radius_desc" >
 
         <ListPreference
             android:defaultValue="2"
-            android:entries="@array/proxRadius"
-            android:entryValues="@array/proxRadiusVals"
-            android:key="proxradius"
+            android:entries="@array/proxyRadius"
+            android:entryValues="@array/proxyRadiusValues"
+            android:key="proxyRadius"
             android:summary="@string/proximity_radius_desc"
             android:title="@string/set_proxi_Title" />
     </PreferenceCategory>
@@ -28,7 +28,7 @@
             android:entries="@array/alert_vibration_repeat"
             android:entryValues="@array/alert_vibration_repeat_values"
             android:key="vibration_repeat"
-            android:summary="@string/vibration_repeatintg"
+            android:summary="@string/vibration_repetition"
             android:title="@string/set_vibration_repeat" >
         </ListPreference>
     </PreferenceCategory>

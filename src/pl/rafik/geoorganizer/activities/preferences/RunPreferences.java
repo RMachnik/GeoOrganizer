@@ -13,7 +13,7 @@ import android.os.Bundle;
 
 /**
  * Klasa uruchamiajaca ustawienia aplikacji, uruchamia fragment
- * {@link PreferencesFragment}
+ * {@link GeoOrganizerPreferences}
  * 
  * @author rafal.machnik
  * 
@@ -24,7 +24,7 @@ public class RunPreferences extends Activity {
 		super.onCreate(savedInstanceState);
 
 		getFragmentManager().beginTransaction()
-				.replace(android.R.id.content, new PreferencesFragment())
+				.replace(android.R.id.content, new GeoOrganizerPreferences())
 				.commit();
 		IProximityAlertService proxiService = new ProximityAlertService(this);
 		ITaskService taskService = new TaskService(this);

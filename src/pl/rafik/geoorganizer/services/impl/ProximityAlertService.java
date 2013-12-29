@@ -10,6 +10,7 @@ import android.location.LocationManager;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import pl.rafik.geoorganizer.activities.preferences.GeoOrganizerPreferences;
 import pl.rafik.geoorganizer.model.dto.TaskDTO;
 import pl.rafik.geoorganizer.model.entity.TaskOpenHelper;
 import pl.rafik.geoorganizer.services.IProximityAlertService;
@@ -33,10 +34,11 @@ public class ProximityAlertService implements IProximityAlertService {
 
     public ProximityAlertService(Context c) {
         SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(c);
+        this.radius = Float.parseFloat(SP.getString(GeoOrganizerPreferences.PROXY_RADIUS, "100"));
         this.locationManager = (LocationManager) c
                 .getSystemService(Context.LOCATION_SERVICE);
         this.context = c;
-        this.radius = Float.parseFloat(SP.getString("proxradius", "100"));
+
 
     }
 
