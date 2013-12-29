@@ -6,7 +6,7 @@ import pl.rafik.geoorganizer.services.ITaskService;
 import pl.rafik.geoorganizer.services.impl.TaskService;
 
 /**
- * rafik991@gmai.com
+ * rafik991@gmail.com
  * 12/28/13
  */
 public class ProximityUtil {
@@ -17,7 +17,6 @@ public class ProximityUtil {
         this.currentLocation = currentLocation;
         taskService = new TaskService(context);
     }
-
 
 
 }

@@ -1,14 +1,17 @@
 package pl.rafik.geoorganizer.services.impl;
 
+import android.annotation.TargetApi;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Criteria;
 import android.location.LocationManager;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import pl.rafik.geoorganizer.model.dto.TaskDTO;
+import pl.rafik.geoorganizer.model.entity.TaskOpenHelper;
 import pl.rafik.geoorganizer.services.IProximityAlertService;
 
 import java.util.ArrayList;
@@ -22,7 +25,8 @@ import java.util.List;
  * @author rafal.machnik
  */
 public class ProximityAlertService implements IProximityAlertService {
-    private static final String PROX_ALERT_INTENT = "pl.rafik.geoorganizer.PROXIMITY_ALERT";
+    private final String PROXIMITY_ALERT_INTENT = "pl.rafik.geoorganizer.PROXIMITY_ALERT";
+    private final long UPDATE_TIME = 50000;
     private LocationManager locationManager;
     private Context context;
     private float radius;
@@ -36,42 +40,42 @@ public class ProximityAlertService implements IProximityAlertService {
 
     }
 
+    @TargetApi(Build.VERSION_CODES.GINGERBREAD)
     @Override
     public boolean addProximityAlert(TaskDTO dto) {
-        Intent intent = new Intent(PROX_ALERT_INTENT);
-        intent.putExtra("id", dto.getId());
+        Intent intent = new Intent(PROXIMITY_ALERT_INTENT);
+        intent.putExtra(TaskOpenHelper.ID, dto.getId());
         PendingIntent proximityIntent = PendingIntent.getBroadcast(context, 0,
                 intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         Log.d("computation", String.valueOf(computeExpirationTime(dto)));
-        locationManager.addProximityAlert((double) (Double.parseDouble((dto
+        locationManager.addProximityAlert((Double.parseDouble((dto
                 .getLocalisation().getLatitude()))),
-                (double) (Double.parseDouble((dto.getLocalisation()
+                (Double.parseDouble((dto.getLocalisation()
                         .getLongitude()))), radius,
                 computeExpirationTime(dto), proximityIntent);
-        Criteria crit = new Criteria();
-        crit.setAccuracy(Criteria.ACCURACY_COARSE);
-        locationManager.requestLocationUpdates((long) 10000, radius, crit,
+        locationManager.requestLocationUpdates(UPDATE_TIME, radius, createcriteria(),
                 proximityIntent);
         return true;
 
     }
 
+    @TargetApi(Build.VERSION_CODES.GINGERBREAD)
     @Override
     public boolean addProximityAlerts(Context caller, ArrayList<TaskDTO> list) {
         for (TaskDTO dto : list) {
-            Intent intent = new Intent(PROX_ALERT_INTENT);
-            intent.putExtra("id", dto.getId());
+            Intent intent = new Intent(PROXIMITY_ALERT_INTENT);
+
+            intent.putExtra(TaskOpenHelper.ID, dto.getId());
             PendingIntent proximityIntent = PendingIntent.getBroadcast(context,
-                    0, intent, 0);
+                    dto.getId().hashCode(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
             Log.d("data", String.valueOf(computeExpirationTime(dto)));
             locationManager.addProximityAlert(
                     Double.parseDouble(dto.getLocalisation().getLatitude()),
                     Double.parseDouble(dto.getLocalisation().getLongitude()),
                     radius, computeExpirationTime(dto), proximityIntent);
-            Criteria crit = new Criteria();
-            crit.setAccuracy(Criteria.ACCURACY_COARSE);
-            locationManager.requestLocationUpdates((long) 10000, radius, crit,
+
+            locationManager.requestLocationUpdates(UPDATE_TIME, radius, createcriteria(),
                     proximityIntent);
         }
         return true;
@@ -80,13 +84,19 @@ public class ProximityAlertService implements IProximityAlertService {
     @Override
     public void removeAlert(TaskDTO dto) {
 
-        Intent intent = new Intent(PROX_ALERT_INTENT);
-        intent.putExtra("id", dto.getId());
-        PendingIntent proximityIntent = PendingIntent.getBroadcast(context, 0,
-                intent, 0);
+        Intent intent = new Intent(PROXIMITY_ALERT_INTENT);
+        intent.putExtra(TaskOpenHelper.ID, dto.getId());
+        PendingIntent proximityIntent = PendingIntent.getBroadcast(context, dto.getId().hashCode(),
+                intent, PendingIntent.FLAG_CANCEL_CURRENT);
         locationManager.removeProximityAlert(proximityIntent);
         locationManager.removeUpdates(proximityIntent);
 
+    }
+
+    private Criteria createcriteria() {
+        Criteria crit = new Criteria();
+        crit.setAccuracy(Criteria.POWER_MEDIUM);
+        return crit;
     }
 
     @Override

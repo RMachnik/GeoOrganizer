@@ -19,6 +19,7 @@ import com.dropbox.sync.android.DbxException;
 import pl.rafik.geoorganizer.R;
 import pl.rafik.geoorganizer.activities.main.ShowDetails;
 import pl.rafik.geoorganizer.model.dto.TaskDTO;
+import pl.rafik.geoorganizer.model.entity.TaskOpenHelper;
 import pl.rafik.geoorganizer.services.ITaskService;
 
 /**
@@ -77,12 +78,12 @@ public class ProximityIntentReceiver extends BroadcastReceiver {
         tickerText = "";
         long when = System.currentTimeMillis();
         Intent notificationIntent = new Intent(context, ShowDetails.class);
-        notificationIntent.putExtra("id", dto.getId());
+        notificationIntent.putExtra(TaskOpenHelper.ID, dto.getId());
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
                 | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent cI = PendingIntent.getActivity(context, 0,
                 notificationIntent, 0);
-         //old way of notification creations
+        //old way of notification creations
         // Notification n = new Notification(icon, tickerText, when);
         //notification.setLatestEventInfo(context, contentTitle, contentText, cI);
         notification = new Notification.Builder(context).setSmallIcon(icon).setTicker(tickerText).setWhen(when).setContentTitle
