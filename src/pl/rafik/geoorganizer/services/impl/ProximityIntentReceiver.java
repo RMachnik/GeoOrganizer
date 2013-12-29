@@ -116,7 +116,7 @@ public class ProximityIntentReceiver extends BroadcastReceiver {
         taskService = new TaskService(context);
         bundle = intent.getExtras();
         try {
-            dto = taskService.getTask(bundle.getString("id"));
+            dto = taskService.getTask(bundle.getString(TaskOpenHelper.ID));
         } catch (DbxException e) {
             e.printStackTrace();
         }

@@ -1,16 +1,17 @@
 package pl.rafik.geoorganizer.activities.main;
 
-import android.annotation.SuppressLint;
-import android.app.*;
+import android.annotation.TargetApi;
+import android.app.Activity;
+import android.app.DialogFragment;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.os.Vibrator;
-import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -18,9 +19,14 @@ import android.view.View.OnFocusChangeListener;
 import android.widget.*;
 import com.dropbox.sync.android.DbxException;
 import pl.rafik.geoorganizer.R;
+import pl.rafik.geoorganizer.activities.main.pickers.DatePickerFragment;
+import pl.rafik.geoorganizer.activities.main.pickers.TimePickerFragment;
+import pl.rafik.geoorganizer.handlers.RefreshAddressHandler;
+import pl.rafik.geoorganizer.handlers.RefreshLocalisationHandler;
 import pl.rafik.geoorganizer.activities.map.ShowOnMap;
 import pl.rafik.geoorganizer.model.dto.GeoLocalisation;
 import pl.rafik.geoorganizer.model.dto.TaskDTO;
+import pl.rafik.geoorganizer.model.entity.TaskOpenHelper;
 import pl.rafik.geoorganizer.services.IProximityAlertService;
 import pl.rafik.geoorganizer.services.impl.LocalisationService;
 import pl.rafik.geoorganizer.services.impl.MyBestLocation;
@@ -35,7 +41,7 @@ import java.util.Calendar;
  *
  * @author Rafal
  */
-public class NewTask extends Activity {
+public class NewTask extends Activity implements AddEditTaskI {
 
     private Button findMap;
     private Button save;
@@ -67,11 +73,12 @@ public class NewTask extends Activity {
 
     }
 
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private void initialiseTaskForm() {
         radioGroup = (RadioGroup) findViewById(R.id.priority_group);
         findMap = (Button) findViewById(R.id.btn_find_on_map);
-        service = new LocalisationService(handler, NewTask.this);
-        service1 = new LocalisationService(simpleHandler, NewTask.this);
+        setService(new LocalisationService(handler, NewTask.this));
+        setService1(new LocalisationService(simpleHandler, NewTask.this));
         taskService = new TaskService(this);
         placeName = (TextView) findViewById(R.id.postalAddress);
         // autoService = new AutocompleteService();
@@ -130,13 +137,13 @@ public class NewTask extends Activity {
                                         location.getLatitude());
                                 mapIntent.putExtra("Longitude",
                                         location.getLongitude());
-                                mapIntent.putExtra("Desc", addr);
+                                mapIntent.putExtra("Desc", getAddr());
                                 mapIntent.putExtra("Titile", taskName.getText());
                                 NewTask.this.startActivityForResult(mapIntent,
                                         0);
                             } else {
                                 Toast.makeText(NewTask.this,
-                                        "Czekam na lokalizacje...",
+                                        getApplicationContext().getString(R.string.toast_waiting),
                                         Toast.LENGTH_SHORT).show();
                             }
                         }
@@ -147,7 +154,7 @@ public class NewTask extends Activity {
                     }
 
                 } else {
-                    service.getAddresFromName(placeName.getText().toString());
+                    getService().getAddresFromName(placeName.getText().toString());
 
                 }
             }
@@ -173,7 +180,7 @@ public class NewTask extends Activity {
             public void onFocusChange(View arg0, boolean arg1) {
                 if (arg1 == false && placeName.getText().length() > 2) {
 
-                    service1.getAddresFromName(placeName.getText().toString());
+                    getService1().getAddresFromName(placeName.getText().toString());
                 }
             }
 
@@ -181,8 +188,8 @@ public class NewTask extends Activity {
     }
 
     private void initialiseHandlers() {
-        handler = new RefreshHandler();
-        simpleHandler = new RefreshHandler1();
+        handler = new RefreshLocalisationHandler(this);
+        simpleHandler = new RefreshAddressHandler(this);
     }
 
     // !!!!!!!!!!!!!!!! poprawic problem z zapisywaniem danych do lokalizatora.
@@ -191,23 +198,24 @@ public class NewTask extends Activity {
      * Metoda dodajaca nowe zadanie do bazy, zdefiniowane w formularzu
      * aktywnosci.
      */
+    @TargetApi(Build.VERSION_CODES.GINGERBREAD)
     public void addNewTask() throws DbxException {
         TaskDTO taskDTO = new TaskDTO();
         if (taskName.getText().toString().isEmpty()) {
-            taskName.setError("Pole wymagane!");
+            taskName.setError(getApplicationContext().getString(R.string.error_fieldRequired));
             return;
         } else if (placeName.getText().toString().isEmpty()) {
-            placeName.setError("Pole wymagane!");
+            placeName.setError(getApplicationContext().getString(R.string.error_fieldRequired));
             return;
         } else if (dedline.getText().toString().isEmpty()) {
-            dedline.setError("Pole wymagane!");
+            dedline.setError(getApplicationContext().getString(R.string.error_fieldRequired));
             return;
         }// do sprawdzenia!!!!!!!!!!!!!
         // else if (checkActualDate()) {
         // dedline.setError("!");
         // return;
         // }
-        if (!(service1.addressList.isEmpty() && addr.isEmpty())) {
+        if (!(getService1().addressList.isEmpty() && getAddr().isEmpty())) {
             taskDTO.setNote(taskName.getText().toString());
             if (edtTime.getText().toString().isEmpty())
                 taskDTO.setDate(prepareDedline(dedline.getText().toString(),
@@ -215,17 +223,17 @@ public class NewTask extends Activity {
             else
                 taskDTO.setDate(prepareDedline(dedline.getText().toString(),
                         edtTime.getText().toString()));
-            taskDTO.setStatus("NOT");
-            service1.getAddresFromName(placeName.getText().toString());
-            if (!addr.equals("")) {
+            taskDTO.setStatus(TaskOpenHelper.NOT_DONE);
+            getService1().getAddresFromName(placeName.getText().toString());
+            if (!getAddr().equals("")) {
                 GeoLocalisation geo = new GeoLocalisation();
-                geo.setLatitude(String.valueOf((int) (address.getLatitude() * 1000000)));
-                geo.setLongitude(String.valueOf((int) (address.getLongitude() * 1000000)));
+                geo.setLatitude(String.valueOf(getAddress().getLatitude()));
+                geo.setLongitude(String.valueOf(getAddress().getLongitude()));
 
-                geo.setLocalistationAddress(addr);
+                geo.setLocalistationAddress(getAddr());
                 taskDTO.setLocalisation(geo);
             } else {
-                placeName.setError("Prosze wprowadzic poprawna lokalizacje!");
+                placeName.setError(getApplicationContext().getString(R.string.error_localisationName));
             }
             int selected = radioGroup.getCheckedRadioButtonId();
             RadioButton button = (RadioButton) findViewById(selected);
@@ -234,7 +242,7 @@ public class NewTask extends Activity {
             if (!taskDTO.getId().equals("0")) {
                 // wystartowanie nowej aktywnosci
                 if (proximityService.addProximityAlert(taskDTO)) {
-                    Toast.makeText(NewTask.this, "Dodano zadanie!",
+                    Toast.makeText(NewTask.this, getApplicationContext().getString(R.string.toast_taskAdded),
                             Toast.LENGTH_SHORT).show();
                     vibrator.vibrate(200);
                     Intent ret = this.getIntent();
@@ -242,11 +250,11 @@ public class NewTask extends Activity {
                     finish();
                 }
             } else {
-                Toast.makeText(this, "Blad zapisu do bazy!", Toast.LENGTH_LONG)
+                Toast.makeText(this, getApplicationContext().getString(R.string.toast_dbSaveFail), Toast.LENGTH_LONG)
                         .show();
             }
         } else {
-            placeName.setError("Niewlasciwa lokalizacja wprowadz inna!");
+            placeName.setError(getApplicationContext().getString(R.string.error_placeName));
             return;
         }
 
@@ -273,6 +281,7 @@ public class NewTask extends Activity {
     // **********Metody dodatkowe obsluga daty i czasu**********
 
     // gdy data jest nieaktualna zwraca true
+    @Override
     public boolean checkActualDate() {
         Calendar c = Calendar.getInstance();
 
@@ -291,135 +300,79 @@ public class NewTask extends Activity {
         return true;
     }
 
+    @Override
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public void showDatePickerDialog(View v) {
-        DialogFragment newFragment = new DatePickerFragment();
+        DialogFragment newFragment = new DatePickerFragment(this);
         newFragment.show(fragmentManager, "datePicker");
     }
 
+    @Override
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public void showTimePickerDialog(View v) {
-        DialogFragment newFragment = new TimePickerFragment();
+        DialogFragment newFragment = new TimePickerFragment(this);
         newFragment.show(fragmentManager, "timePicker");
     }
 
+    @Override
     public void updateDate(int year, int month, int day) {
         dedline.setText(String.valueOf(day) + "-" + String.valueOf(month) + "-"
                 + String.valueOf(year));
     }
 
+    @Override
     public void updateTime(int hour, int minute) {
         edtTime.setText(String.valueOf(hour) + ":" + String.valueOf(minute));
     }
 
+    @Override
     public String prepareDedline(String date, String time) {
         // SimpleDateFormat sdf = new SimpleDateFormat()
         return date + " " + time;
     }
 
-    /**
-     * Handler obslugujacy wspolbiezna obsluge wielowatkowa przy wcisnieciu
-     * guzika.
-     *
-     * @author rafal.machnik
-     */
-
-    private class RefreshHandler extends Handler {
-
-        @Override
-        public void handleMessage(Message msg) {
-            if (service.addressList.isEmpty() || service.addressList == null) {
-                Toast.makeText(NewTask.this,
-                        "Nie znaleziono pasujacych rezultatow!",
-                        Toast.LENGTH_LONG).show();
-            } else {
-                for (Address a : service.addressList) {
-                    address = a;
-                    addr = "";
-                    for (int i = 0; i < a.getMaxAddressLineIndex() - 1; i++) {
-                        addr += a.getAddressLine(i) + ", ";
-                    }
-                    addr += a.getAddressLine(a.getMaxAddressLineIndex() - 1);
-                    if (!addr.equals("")) {
-                        Intent mapView = new Intent(NewTask.this,
-                                ShowOnMap.class);
-                        mapView.putExtra("Latitude", address.getLatitude());
-                        mapView.putExtra("Longitude", address.getLongitude());
-                        // aktywnosc uruchamiana w trybie request for result, w
-                        // oczekiwaniu na potwierdzenie lolalizacji
-                        startActivityForResult(mapView, 0);
-                    }
-
-                }
-            }
-        }
+    @Override
+    public LocalisationService getService() {
+        return service;
     }
 
-    ;
-
-    private class RefreshHandler1 extends Handler {
-        @Override
-        public void handleMessage(Message msg) {
-            if (service1.addressList == null || service1.addressList.isEmpty()) {
-                Toast.makeText(NewTask.this,
-                        "Nie znaleziono pasujacych rezultatow!",
-                        Toast.LENGTH_LONG).show();
-            } else {
-                for (Address a : service1.addressList) {
-                    address = a;
-                    addr = "";
-                    for (int i = 0; i < a.getMaxAddressLineIndex(); i++) {
-                        addr += a.getAddressLine(i) + ", ";
-                    }
-                }
-            }
-        }
+    public void setService(LocalisationService service) {
+        this.service = service;
     }
 
-    ;
-
-    @SuppressLint("ValidFragment")
-    private class DatePickerFragment extends DialogFragment implements
-            DatePickerDialog.OnDateSetListener {
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            final Calendar c = Calendar.getInstance();
-            int year = c.get(Calendar.YEAR);
-            int month = c.get(Calendar.MONTH);
-            int day = c.get(Calendar.DAY_OF_MONTH);
-            return new DatePickerDialog(NewTask.this, this, year, month, day);
-        }
-
-        @Override
-        public void onDateSet(DatePicker view, int year, int monthOfYear,
-                              int dayOfMonth) {
-            updateDate(year, monthOfYear, dayOfMonth);
-
-        }
-
+    @Override
+    public LocalisationService getService1() {
+        return service1;
     }
 
-    ;
-
-    @SuppressLint("ValidFragment")
-    private class TimePickerFragment extends DialogFragment implements
-            TimePickerDialog.OnTimeSetListener {
-
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            final Calendar c = Calendar.getInstance();
-            int hour = c.get(Calendar.HOUR_OF_DAY);
-            int minute = c.get(Calendar.MINUTE);
-            return new TimePickerDialog(NewTask.this, this, hour, minute,
-                    DateFormat.is24HourFormat(NewTask.this));
-        }
-
-        @Override
-        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-            updateTime(hourOfDay, minute);
-
-        }
-
+    public void setService1(LocalisationService service1) {
+        this.service1 = service1;
     }
 
-    ;
+    @Override
+    public TaskService getTaskService() {
+        return taskService;
+    }
+
+    @Override
+    public Address getAddress() {
+        return address;
+    }
+
+    @Override
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
+    @Override
+    public String getAddr() {
+        return addr;
+    }
+
+    @Override
+    public void setAddr(String addr) {
+        this.addr = addr;
+    }
+
 
 }

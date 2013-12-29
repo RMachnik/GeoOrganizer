@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.location.Address;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -17,6 +16,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import pl.rafik.geoorganizer.R;
+import pl.rafik.geoorganizer.handlers.RefreshHandlerMapSearch;
 import pl.rafik.geoorganizer.services.impl.LocalisationService;
 import pl.rafik.geoorganizer.util.MapUtil;
 
@@ -28,8 +28,8 @@ import pl.rafik.geoorganizer.util.MapUtil;
  */
 public class ShowOnMap extends FragmentActivity {
 
-    double latitude;
-    double longitude;
+    private double latitude;
+    private double longitude;
     private LatLng point;
     private GoogleMap mv;
     private Button zatwierdz;
@@ -48,16 +48,17 @@ public class ShowOnMap extends FragmentActivity {
 
         setContentView(R.layout.map);
         Bundle bundle = getIntent().getExtras();
-        handler = new RefreshHandler();
-        service = new LocalisationService(handler, this);
-        initialiseMap(bundle);
-        mapUtil.setMapCenter(mv, point, addr);
+        handler = new RefreshHandlerMapSearch(this);
+        setService(new LocalisationService(handler, this));
         initialiseButtons();
+        initialiseMap(bundle);
+        mapUtil.setMapCenter(getMv(), point, getAddr());
+
     }
 
     private void initialiseButtons() {
         zatwierdz = (Button) findViewById(R.id.btn_confirmTaskLocation);
-        searchEdt = (EditText) findViewById(R.id.et_search);
+        setSearchEdt((EditText) findViewById(R.id.et_search));
         change = (Button) findViewById(R.id.btn_searchOnMap);
 
         // wyszukiwanie nowej lokalizacji
@@ -65,10 +66,10 @@ public class ShowOnMap extends FragmentActivity {
 
             @Override
             public void onClick(View arg0) {
-                if (searchEdt.getText().toString().isEmpty()) {
+                if (getSearchEdt().getText().toString().isEmpty()) {
 
                 } else {
-                    service.getAddresFromName(searchEdt.getText().toString());
+                    getService().getAddresFromName(getSearchEdt().getText().toString());
                 }
 
             }
@@ -81,28 +82,28 @@ public class ShowOnMap extends FragmentActivity {
                 // kiedy w polu wyszukiwania jest tekst ktory nie zostal jeszcze
                 // odnaleziony, tzn funkcja wyszukiwania lokalizacji nie zostala
                 // odpalona
-                if (!addr.contains(searchEdt.getText().toString())) {
-                    service.getAddresFromName(searchEdt.getText().toString());
-                } else if (searchEdt.getText().toString().isEmpty()
-                        && addr.isEmpty()) {
+                if (!getAddr().contains(getSearchEdt().getText().toString())) {
+                    getService().getAddresFromName(getSearchEdt().getText().toString());
+                } else if (getSearchEdt().getText().toString().isEmpty()
+                        && getAddr().isEmpty()) {
                     // gdy jednak nie wprowadzimy zadnej zmiany
                     setRequestedOrientation(RESULT_CANCELED);
                     Intent data = ShowOnMap.this.getIntent();
                     setResult(RESULT_CANCELED, data);
                     finish();
-                } else if (searchEdt.getText().toString().isEmpty()
-                        && !addr.isEmpty()) {
+                } else if (getSearchEdt().getText().toString().isEmpty()
+                        && !getAddr().isEmpty()) {
                     Intent data = ShowOnMap.this.getIntent();
-                    data.putExtra("PlaceName", addr);
-                    data.putExtra("Latitude", latitude);
-                    data.putExtra("Longitude", longitude);
+                    data.putExtra("PlaceName", getAddr());
+                    data.putExtra("Latitude", getLatitude());
+                    data.putExtra("Longitude", getLongitude());
                     setResult(RESULT_OK, data);
                     finish();
                 }
                 Intent data = ShowOnMap.this.getIntent();
-                data.putExtra("PlaceName", searchEdt.getText().toString());
-                data.putExtra("Latitude", latitude);
-                data.putExtra("Longitude", longitude);
+                data.putExtra("PlaceName", getSearchEdt().getText().toString());
+                data.putExtra("Latitude", getLatitude());
+                data.putExtra("Longitude", getLongitude());
                 setResult(RESULT_OK, data);
                 finish();
             }
@@ -111,15 +112,16 @@ public class ShowOnMap extends FragmentActivity {
     }
 
     private void initialiseMap(Bundle bundle) {
-        mv = ((MapFragment) getFragmentManager().findFragmentById(
-                R.id.map)).getMap();
-        mv.setMyLocationEnabled(true);
-        mv.getUiSettings().setMyLocationButtonEnabled(true);
-        latitude = (bundle.getDouble("Latitude"));
-        longitude = (bundle.getDouble("Longitude"));
-        Log.d("Latitude", String.valueOf(latitude));
-        Log.d("Longitude", String.valueOf(longitude));
-        point = new LatLng(latitude, longitude);
+        setMv(((MapFragment) getFragmentManager().findFragmentById(
+                R.id.map)).getMap());
+        getMv().setMyLocationEnabled(true);
+        getMv().getUiSettings().setMyLocationButtonEnabled(true);
+        setLatitude((bundle.getDouble("Latitude")));
+        setLongitude((bundle.getDouble("Longitude")));
+        Log.d("Latitude", String.valueOf(getLatitude()));
+        Log.d("Longitude", String.valueOf(getLongitude()));
+        point = new LatLng(getLatitude(), getLongitude());
+        getSearchEdt().setText(getAddr());
     }
 
     @Override
@@ -128,7 +130,7 @@ public class ShowOnMap extends FragmentActivity {
         return true;
     }
 
-    private void initilizeMap() {
+    private void initialiseMap() {
         if (googleMap == null) {
             googleMap = ((MapFragment) getFragmentManager().findFragmentById(
                     R.id.map)).getMap();
@@ -145,80 +147,62 @@ public class ShowOnMap extends FragmentActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        initilizeMap();
+        initialiseMap();
     }
 
-    /**
-     * Klasa oboslugujaca serwis ktory po znalezieniu odpowiedniej lokalizacji
-     * wysyla message.
-     *
-     * @author Rafal
-     */
-    private class RefreshHandler extends Handler {
-
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case 2: {
-                    if (service.addressList.isEmpty()
-                            || service.addressList == null) {
-                        Toast.makeText(ShowOnMap.this,
-                                "Nie znaleziono pasujacych rezultatow!",
-                                Toast.LENGTH_LONG).show();
-                    } else {
-                        for (Address a : service.addressList) {
-                            address = a;
-                            addr = "";
-                            for (int i = 0; i < a.getMaxAddressLineIndex() - 1; i++) {
-                                addr += a.getAddressLine(i) + ", ";
-                            }
-                            addr += a
-                                    .getAddressLine(a.getMaxAddressLineIndex() - 1);
-                            Log.d("fullAddress", addr);
-                            latitude = (address.getLatitude());
-                            longitude = (address.getLongitude());
-                            LatLng nPoint = new LatLng(
-                                    (address.getLatitude()),
-                                    (address.getLongitude()));
-                            mapUtil.setMapCenter(mv, nPoint, addr);
-
-                        }
-                    }
-                    return;
-                }
-                case 1: {
-                    if (service.addressList.isEmpty()
-                            || service.addressList == null) {
-                        Toast.makeText(ShowOnMap.this,
-                                "Nie znaleziono pasujacych rezultatow!",
-                                Toast.LENGTH_LONG).show();
-                    } else {
-                        for (Address a : service.addressList) {
-                            address = a;
-                            addr = "";
-                            for (int i = 0; i < a.getMaxAddressLineIndex() - 1; i++) {
-                                addr += a.getAddressLine(i) + ", ";
-                            }
-                            addr += a
-                                    .getAddressLine(a.getMaxAddressLineIndex() - 1);
-                            Log.d("fullAddress", addr);
-                            latitude = (address.getLatitude());
-                            longitude = (address.getLongitude());
-                            LatLng nPoint = new LatLng(
-                                    (address.getLatitude()),
-                                    (address.getLongitude()));
-                            searchEdt.setText(addr);
-                            mapUtil.setMapCenter(mv, nPoint, addr);
-                        }
-                        return;
-                    }
-                }
-                case 3: {
-                    Log.d("handler", "from map change desc");
-                    return;
-                }
-            }
-        }
+    public GoogleMap getMv() {
+        return mv;
     }
 
+    public void setMv(GoogleMap mv) {
+        this.mv = mv;
+    }
+
+    public EditText getSearchEdt() {
+        return searchEdt;
+    }
+
+    public void setSearchEdt(EditText searchEdt) {
+        this.searchEdt = searchEdt;
+    }
+
+    public LocalisationService getService() {
+        return service;
+    }
+
+    public void setService(LocalisationService service) {
+        this.service = service;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
+    public String getAddr() {
+        return addr;
+    }
+
+    public void setAddr(String addr) {
+        this.addr = addr;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
 }

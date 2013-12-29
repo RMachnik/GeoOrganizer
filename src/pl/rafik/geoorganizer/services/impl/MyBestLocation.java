@@ -10,6 +10,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -25,7 +26,6 @@ public class MyBestLocation {
     LocationListener locationListenerGps = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
-            timer1.cancel();
             locationResult.gotLocation(location);
             lm.removeUpdates(this);
             lm.removeUpdates(locationListenerNetwork);
@@ -46,7 +46,6 @@ public class MyBestLocation {
     LocationListener locationListenerNetwork = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
-            timer1.cancel();
             locationResult.gotLocation(location);
             lm.removeUpdates(this);
             lm.removeUpdates(locationListenerGps);
@@ -65,13 +64,14 @@ public class MyBestLocation {
         }
     };
     //delay in seconds
-    private int DELAY = 15;
+    private int DELAY = 10;
     private Timer timer1;
     private LocationManager lm;
     private LocationResult locationResult;
     private boolean gps_enabled = false;
     private boolean network_enabled = false;
     private ScheduledExecutorService scheduler;
+    private ScheduledFuture scheduledFuture;
 
     public boolean getLocation(Context context, LocationResult result) {
         // przypisanie referencji
@@ -110,7 +110,7 @@ public class MyBestLocation {
         // opozniam uruchomienie watku w celu odszukania lokacji jesli ktorys z
         // providerow zdola to zrobic
         scheduler = Executors.newSingleThreadScheduledExecutor();
-        scheduler.schedule(new GetLastLocation(), DELAY, TimeUnit.SECONDS);
+        scheduledFuture = scheduler.schedule(new GetLastLocation(), DELAY, TimeUnit.SECONDS);
 
         return true;
     }

@@ -2,12 +2,14 @@ package pl.rafik.geoorganizer.activities.map;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import com.dropbox.sync.android.DbxException;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import pl.rafik.geoorganizer.R;
 import pl.rafik.geoorganizer.model.dto.TaskDTO;
+import pl.rafik.geoorganizer.model.entity.TaskOpenHelper;
 import pl.rafik.geoorganizer.services.impl.TaskService;
 import pl.rafik.geoorganizer.util.MapUtil;
 
@@ -32,7 +34,7 @@ public class ShowListOnMap extends FragmentActivity {
         setContentView(R.layout.map_list_items);
         initialiseServices();
         initialiseContent();
-        mapUtil.setMapCenter(mv, points);
+        mapUtil.setMapCenter(mv, tasks);
 
     }
 
@@ -41,7 +43,7 @@ public class ShowListOnMap extends FragmentActivity {
         Bundle bundle = getIntent().getExtras();
         mv = ((MapFragment) getFragmentManager().findFragmentById(
                 R.id.mapView)).getMap();
-        String[] ids = bundle.getStringArray("IDS");
+        String[] ids = bundle.getStringArray(TaskOpenHelper.ID);
         points = new LatLng[ids.length];
         for (int i = 0; i < ids.length; i++) {
             TaskDTO dto = null;
@@ -50,10 +52,11 @@ public class ShowListOnMap extends FragmentActivity {
             } catch (DbxException e) {
                 e.printStackTrace();
             }
-//			Log.d("Latitude",String.valueOf((Integer.parseInt(dto.getLocalisation()
-//					.getLatitude()))));
-//			Log.d("Longitude",String.valueOf((Integer.parseInt(dto.getLocalisation()
-//					.getLongitude()))));
+			Log.d("Latitude", String.valueOf((Double.parseDouble(dto.getLocalisation()
+                    .getLatitude()))));
+			Log.d("Longitude",String.valueOf((Double.parseDouble(dto.getLocalisation()
+					.getLongitude()))));
+            assert dto != null;
             points[i] = new LatLng(Double.parseDouble(dto.getLocalisation()
                     .getLatitude()), Double.parseDouble(dto.getLocalisation()
                     .getLongitude()));

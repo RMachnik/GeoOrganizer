@@ -4,7 +4,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import pl.rafik.geoorganizer.model.dto.GeoLocalisation;
+import pl.rafik.geoorganizer.model.dto.TaskDTO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,19 +21,14 @@ public class MapUtil {
 
     }
 
-    public void setMapCenter(GoogleMap mv, LatLng[] points) {
-        List<Integer> latitude = new ArrayList<Integer>();
-        List<Integer> longitude = new ArrayList<Integer>();
+    public void setMapCenter(GoogleMap mv, List<TaskDTO> points) {
 
-        for (int i = 0; i < points.length; i++) {
-            GeoLocalisation geo = new GeoLocalisation();
-
+        for (TaskDTO task : points) {
+            LatLng point = new LatLng(Double.parseDouble(task.getLocalisation().getLatitude()), Double.parseDouble(task.getLocalisation().getLongitude()));
             mv.addMarker(new MarkerOptions()
-                    .position(points[i])
-                    .title(geo.getLocalistationAddress()));
-
-
-            mv.animateCamera(CameraUpdateFactory.newLatLngZoom(points[i], 5));
+                    .position(point)
+                    .title(task.getLocalisation().getLocalistationAddress()));
+            mv.animateCamera(CameraUpdateFactory.newLatLngZoom(point, 5));
         }
 
     }

@@ -27,7 +27,7 @@ import java.util.List;
  */
 public class ProximityAlertService implements IProximityAlertService {
     private final String PROXIMITY_ALERT_INTENT = "pl.rafik.geoorganizer.PROXIMITY_ALERT";
-    private final long UPDATE_TIME = 50000;
+    private final long UPDATE_TIME = 300000;
     private LocationManager locationManager;
     private Context context;
     private float radius;
@@ -97,7 +97,7 @@ public class ProximityAlertService implements IProximityAlertService {
 
     private Criteria createcriteria() {
         Criteria crit = new Criteria();
-        crit.setAccuracy(Criteria.POWER_MEDIUM);
+        crit.setAccuracy(Criteria.ACCURACY_LOW);
         return crit;
     }
 

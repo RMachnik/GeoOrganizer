@@ -1,9 +1,11 @@
 package pl.rafik.geoorganizer.activities.main;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.*;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.util.Log;
@@ -17,6 +19,7 @@ import pl.rafik.geoorganizer.activities.list.TaskArrayAdapter;
 import pl.rafik.geoorganizer.activities.map.ShowListOnMap;
 import pl.rafik.geoorganizer.model.dto.EmailBuilder;
 import pl.rafik.geoorganizer.model.dto.TaskDTO;
+import pl.rafik.geoorganizer.model.entity.TaskOpenHelper;
 import pl.rafik.geoorganizer.services.IEmailService;
 import pl.rafik.geoorganizer.services.IProximityAlertService;
 import pl.rafik.geoorganizer.services.impl.EmailService;
@@ -58,6 +61,7 @@ public class TaskList extends ListActivity {
 
     }
 
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private void initialiseServices() {
         taskService = new TaskService(TaskList.this);
         proximityService = new ProximityAlertService(this);
@@ -186,7 +190,7 @@ public class TaskList extends ListActivity {
                 String[] ids = {dto.getId()};
                 Intent showOnMapIntent = new Intent(TaskList.this,
                         ShowListOnMap.class);
-                showOnMapIntent.putExtra("IDS", ids);
+                showOnMapIntent.putExtra(TaskOpenHelper.ID, ids);
                 TaskList.this.startActivity(showOnMapIntent);
 
             }

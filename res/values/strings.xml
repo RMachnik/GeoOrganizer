@@ -59,6 +59,15 @@
     <string name="DROPBOX_APP_KEY" >wzid3rxyqgf9tfl</string>
     <string name="DROPBOX_SECRET_KEY">3z7d6lazq72onze</string>
     <string name="link_button">Link to dropbox</string>
+    <string name="error_localisationName">Prosze wprowadzic poprawna lokalizacje!</string>
+    <string name="toast_taskAdded">Dodano zadanie!</string>
+    <string name="toast_dbSaveFail">Blad zapisu do bazy!</string>
+    <string name="error_placeName">Niewlasciwa lokalizacja wprowadz inna!</string>
+    <string name="error_fieldRequired">Pole wymagane!</string>
+    <string name="error_noResultsFound">Nie znaleziono pasujacych rezultatow!</string>
+    <string name="toast_waiting">Czekam na lokalizacje...</string>
+    <string name="toast_editionSuccess">Edycja udana.</string>
+    <string name="toast_editionFailed">Edycja nieudana!</string>
 
 
 </resources>

@@ -72,5 +72,6 @@ public class LocalisationService implements ILocalisationService {
 
         };
         thrd.start();
+
     }
 }
