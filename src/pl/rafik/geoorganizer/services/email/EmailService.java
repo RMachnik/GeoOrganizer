@@ -1,4 +1,4 @@
-package pl.rafik.geoorganizer.services.impl;
+package pl.rafik.geoorganizer.services.email;
 
 import android.app.Activity;
 import android.content.Intent;

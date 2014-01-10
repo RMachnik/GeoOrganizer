@@ -1,13 +1,14 @@
-package pl.rafik.geoorganizer.services.impl;
+package pl.rafik.geoorganizer.services.data;
 
 import android.content.Context;
 import com.dropbox.sync.android.DbxException;
-import pl.rafik.geoorganizer.dao.impl.DbxTaskDAO;
 import pl.rafik.geoorganizer.dao.ITaskDAO;
+import pl.rafik.geoorganizer.dao.impl.DbxTaskDAO;
 import pl.rafik.geoorganizer.model.dto.GeoLocalisation;
 import pl.rafik.geoorganizer.model.dto.TaskDTO;
 import pl.rafik.geoorganizer.model.entity.TaskEntity;
 import pl.rafik.geoorganizer.services.IProximityAlertService;
+import pl.rafik.geoorganizer.services.proximity.ProximityAlertScheduledService;
 import pl.rafik.geoorganizer.services.ITaskService;
 
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ public class TaskService implements ITaskService {
 
     public TaskService(Context context) {
         daoService = new DbxTaskDAO(context);
-        proxiService = new ProximityAlertService(context);
+        proxiService = new ProximityAlertScheduledService(context);
     }
 
     @Override

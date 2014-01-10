@@ -1,4 +1,4 @@
-package pl.rafik.geoorganizer.services.impl;
+package pl.rafik.geoorganizer.services.data;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
