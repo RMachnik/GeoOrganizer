@@ -1,4 +1,4 @@
-package pl.rafik.geoorganizer.services.impl;
+package pl.rafik.geoorganizer.services.proximity;
 
 import android.annotation.TargetApi;
 import android.app.PendingIntent;

@@ -59,11 +59,14 @@
         </activity>
 
         <receiver
-                android:name=".services.impl.ProximityIntentReceiver"
+                android:name=".receivers.ProximityIntentReceiver"
                 android:exported="false">
             <intent-filter>
                 <action android:name="pl.rafik.geoorganizer.PROXIMITY_ALERT"/>
             </intent-filter>
+        </receiver>
+
+        <receiver android:name=".receivers.LocalisationUpdatesReceiver">
         </receiver>
 
         <activity android:name=".activities.main.ShowDetails">

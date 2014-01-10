@@ -26,10 +26,10 @@ import pl.rafik.geoorganizer.handlers.RefreshLocalisationHandler;
 import pl.rafik.geoorganizer.activities.map.ShowOnMap;
 import pl.rafik.geoorganizer.model.dto.GeoLocalisation;
 import pl.rafik.geoorganizer.model.dto.TaskDTO;
-import pl.rafik.geoorganizer.services.impl.LocalisationService;
-import pl.rafik.geoorganizer.services.impl.MyBestLocation;
-import pl.rafik.geoorganizer.services.impl.MyBestLocation.LocationResult;
-import pl.rafik.geoorganizer.services.impl.TaskService;
+import pl.rafik.geoorganizer.services.localisation.LocalisationService;
+import pl.rafik.geoorganizer.services.localisation.MyBestLocation;
+import pl.rafik.geoorganizer.services.localisation.MyBestLocation.LocationResult;
+import pl.rafik.geoorganizer.services.data.TaskService;
 
 import static pl.rafik.geoorganizer.model.entity.TaskOpenHelper.NOT_DONE;
 

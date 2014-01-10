@@ -2,7 +2,7 @@ package pl.rafik.geoorganizer.activities.list;
 
 import java.util.ArrayList;
 
-import pl.rafik.geoorganizer.services.impl.AutocompleteService;
+import pl.rafik.geoorganizer.services.data.AutocompleteService;
 import android.content.Context;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;

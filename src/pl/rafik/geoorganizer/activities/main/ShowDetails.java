@@ -15,7 +15,7 @@ import pl.rafik.geoorganizer.R;
 import pl.rafik.geoorganizer.activities.map.ShowListOnMap;
 import pl.rafik.geoorganizer.model.dto.TaskDTO;
 import pl.rafik.geoorganizer.services.ITaskService;
-import pl.rafik.geoorganizer.services.impl.TaskService;
+import pl.rafik.geoorganizer.services.data.TaskService;
 
 import java.util.Calendar;
 

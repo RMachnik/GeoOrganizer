@@ -4,8 +4,8 @@ import android.annotation.TargetApi;
 import android.location.Address;
 import android.os.Build;
 import android.view.View;
-import pl.rafik.geoorganizer.services.impl.LocalisationService;
-import pl.rafik.geoorganizer.services.impl.TaskService;
+import pl.rafik.geoorganizer.services.localisation.LocalisationService;
+import pl.rafik.geoorganizer.services.data.TaskService;
 
 /**
  * rafik991@gmail.com

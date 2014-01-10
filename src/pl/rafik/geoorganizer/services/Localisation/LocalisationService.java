@@ -1,4 +1,4 @@
-package pl.rafik.geoorganizer.services.impl;
+package pl.rafik.geoorganizer.services.localisation;
 
 import android.content.Context;
 import android.location.Address;

@@ -22,9 +22,9 @@ import pl.rafik.geoorganizer.model.dto.TaskDTO;
 import pl.rafik.geoorganizer.model.entity.TaskOpenHelper;
 import pl.rafik.geoorganizer.services.IEmailService;
 import pl.rafik.geoorganizer.services.IProximityAlertService;
-import pl.rafik.geoorganizer.services.impl.EmailService;
-import pl.rafik.geoorganizer.services.impl.ProximityAlertService;
-import pl.rafik.geoorganizer.services.impl.TaskService;
+import pl.rafik.geoorganizer.services.email.EmailService;
+import pl.rafik.geoorganizer.services.proximity.ProximityAlertService;
+import pl.rafik.geoorganizer.services.data.TaskService;
 
 import java.util.ArrayList;
 import java.util.Calendar;

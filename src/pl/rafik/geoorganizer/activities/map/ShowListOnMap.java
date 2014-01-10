@@ -10,7 +10,7 @@ import com.google.android.gms.maps.model.LatLng;
 import pl.rafik.geoorganizer.R;
 import pl.rafik.geoorganizer.model.dto.TaskDTO;
 import pl.rafik.geoorganizer.model.entity.TaskOpenHelper;
-import pl.rafik.geoorganizer.services.impl.TaskService;
+import pl.rafik.geoorganizer.services.data.TaskService;
 import pl.rafik.geoorganizer.util.MapUtil;
 
 import java.util.ArrayList;

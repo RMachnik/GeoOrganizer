@@ -1,4 +1,4 @@
-package pl.rafik.geoorganizer.services.impl;
+package pl.rafik.geoorganizer.services.localisation;
 
 import android.content.Context;
 import android.location.Location;
@@ -64,7 +64,7 @@ public class MyBestLocation {
         }
     };
     //delay in seconds
-    private int DELAY = 10;
+    private int DELAY = 1;
     private Timer timer1;
     private LocationManager lm;
     private LocationResult locationResult;

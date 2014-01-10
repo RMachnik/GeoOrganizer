@@ -27,12 +27,12 @@ import pl.rafik.geoorganizer.activities.map.ShowOnMap;
 import pl.rafik.geoorganizer.model.dto.GeoLocalisation;
 import pl.rafik.geoorganizer.model.dto.TaskDTO;
 import pl.rafik.geoorganizer.model.entity.TaskOpenHelper;
+import pl.rafik.geoorganizer.services.localisation.LocalisationService;
+import pl.rafik.geoorganizer.services.localisation.MyBestLocation;
 import pl.rafik.geoorganizer.services.IProximityAlertService;
-import pl.rafik.geoorganizer.services.impl.LocalisationService;
-import pl.rafik.geoorganizer.services.impl.MyBestLocation;
-import pl.rafik.geoorganizer.services.impl.MyBestLocation.LocationResult;
-import pl.rafik.geoorganizer.services.impl.ProximityAlertService;
-import pl.rafik.geoorganizer.services.impl.TaskService;
+import pl.rafik.geoorganizer.services.proximity.ProximityAlertScheduledService;
+import pl.rafik.geoorganizer.services.data.*;
+import pl.rafik.geoorganizer.services.localisation.MyBestLocation.LocationResult;
 
 import java.util.Calendar;
 
@@ -98,7 +98,7 @@ public class NewTask extends Activity implements AddEditTaskI {
         dedline = (TextView) findViewById(R.id.dedline);
         edtTime = (EditText) findViewById(R.id.nt_edt_time);
         fragmentManager = this.getFragmentManager();
-        proximityService = new ProximityAlertService(this);
+        proximityService = new ProximityAlertScheduledService(this);
         dedline.setOnFocusChangeListener(new OnFocusChangeListener() {
 
             @Override

@@ -17,7 +17,7 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import pl.rafik.geoorganizer.R;
 import pl.rafik.geoorganizer.handlers.RefreshHandlerMapSearch;
-import pl.rafik.geoorganizer.services.impl.LocalisationService;
+import pl.rafik.geoorganizer.services.localisation.LocalisationService;
 import pl.rafik.geoorganizer.util.MapUtil;
 
 /**

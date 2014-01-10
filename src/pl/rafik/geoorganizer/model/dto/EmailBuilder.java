@@ -3,7 +3,7 @@ package pl.rafik.geoorganizer.model.dto;
 import android.content.Context;
 import com.dropbox.sync.android.DbxException;
 import pl.rafik.geoorganizer.services.ITaskService;
-import pl.rafik.geoorganizer.services.impl.TaskService;
+import pl.rafik.geoorganizer.services.data.TaskService;
 
 import java.util.ArrayList;
 import java.util.List;
