@@ -12,8 +12,8 @@ import com.dropbox.sync.android.DbxException;
 import pl.rafik.geoorganizer.model.entity.TaskOpenHelper;
 import pl.rafik.geoorganizer.services.localisation.MyBestLocation;
 import pl.rafik.geoorganizer.services.nofication.NotificationHelper;
-import pl.rafik.geoorganizer.services.proximity.SchedulerFactory;
 import pl.rafik.geoorganizer.services.proximity.ProximityUtil;
+import pl.rafik.geoorganizer.services.proximity.SchedulerFactory;
 
 /**
  * rafik991@gmail.com
@@ -27,26 +27,30 @@ public class LocalisationUpdatesReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(final Context context, final Intent intent) {
+        Log.w("LocalisationUpdatesReceiver!", "updating Service!");
         schedulerFactory = new SchedulerFactory(context);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+
         MyBestLocation.LocationResult locationResult = new MyBestLocation.LocationResult() {
             @Override
             public void gotLocation(Location location) {
                 try {
                     if (location != null) {
-                        ProximityUtil proximityUtil1 = new ProximityUtil(location, context);
-                        proximityUtil1.updateLastClosestData();
-                        schedulerFactory.setUpScheduledService(proximityUtil1.getCurrentUpdateTime());
-                        if (proximityUtil1.shouldFireNotification())
+                       proximityUtil = new ProximityUtil(location, context);
+                        proximityUtil.updateLastClosestData();
+                        schedulerFactory.setUpScheduledService(proximityUtil.getCurrentUpdateTime());
+                        if (proximityUtil.shouldFireNotification())
                             handleNotification(context, intent);
                     } else
-                        throw new Exception("Sth is wrong");
+                        throw new Exception("Sth is wrong there was no localisation");
                 } catch (DbxException e) {
                     Log.e("LOCALISATION_UPDATES_RECEIVER", "Dbx have fault! Broadcast receiver is shutdown!");
                     e.printStackTrace();
+                    return;
                 } catch (Exception e) {
                     Log.e("LOCALISATION_UPDATES_RECEIVER", "Localisation wasn't found! Broadcast receiver is shutdown!");
                     e.printStackTrace();
+                    return;
                 }
             }
         };
