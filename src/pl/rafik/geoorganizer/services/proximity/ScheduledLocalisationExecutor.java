@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.util.Log;
 import pl.rafik.geoorganizer.activities.dbx.DbxStart;
 import pl.rafik.geoorganizer.receivers.LocalisationUpdatesReceiver;
+import pl.rafik.geoorganizer.receivers.PassiveLocalisationUpdatesReceiver;
 
 import java.util.Calendar;
 
@@ -14,7 +15,7 @@ import java.util.Calendar;
  * rafik991@gmail.com
  * 1/10/14
  */
-public class SchedulerFactory {
+public class ScheduledLocalisationExecutor {
 
     private Context context;
     private AlarmManager alarmManager;
@@ -23,7 +24,7 @@ public class SchedulerFactory {
     private DbxStart dbxStart;
 
 
-    public SchedulerFactory(Context appContext) {
+    public ScheduledLocalisationExecutor(Context appContext) {
         context = appContext;
         dbxStart = new DbxStart();
     }

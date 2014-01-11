@@ -66,8 +66,11 @@
             </intent-filter>
         </receiver>
 
+        <receiver android:name=".receivers.PassiveLocalisationUpdatesReceiver">
+        </receiver>
         <receiver android:name=".receivers.LocalisationUpdatesReceiver">
         </receiver>
+
 
         <activity android:name=".activities.main.ShowDetails">
         </activity>

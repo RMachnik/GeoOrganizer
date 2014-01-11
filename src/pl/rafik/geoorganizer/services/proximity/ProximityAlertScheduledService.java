@@ -5,8 +5,6 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import pl.rafik.geoorganizer.model.dto.TaskDTO;
 import pl.rafik.geoorganizer.services.IProximityAlertService;
-import pl.rafik.geoorganizer.services.proximity.ProximityUtil;
-import pl.rafik.geoorganizer.services.proximity.SchedulerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,13 +14,13 @@ import java.util.List;
  * 1/10/14
  */
 public class ProximityAlertScheduledService implements IProximityAlertService {
-    private SchedulerFactory schedulerFactory;
+    private ScheduledLocalisationExecutor schedulerFactory;
     private Context context;
     private SharedPreferences sharedPreferences;
 
     public ProximityAlertScheduledService(Context c) {
         context = c;
-        schedulerFactory = new SchedulerFactory(context);
+        schedulerFactory = new ScheduledLocalisationExecutor(context);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(c);
     }
 

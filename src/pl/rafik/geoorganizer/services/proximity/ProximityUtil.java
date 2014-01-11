@@ -100,7 +100,7 @@ public class ProximityUtil {
 
     private ClosestData getCurrentClosestData() throws DbxException {
         List<TaskDTO> taskList = taskService.getActualTasks();
-        float minDist = Float.MIN_VALUE;
+        float minDist = Float.MAX_VALUE;
         TaskDTO closestTask = null;
         ClosestData closestData = new ClosestData();
         for (TaskDTO task : taskList) {
