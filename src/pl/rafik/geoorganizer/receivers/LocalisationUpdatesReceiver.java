@@ -24,13 +24,13 @@ public class LocalisationUpdatesReceiver extends BroadcastReceiver {
     private ScheduledLocalisationExecutor schedulerFactory;
     private MyBestLocation myBestLocation = new MyBestLocation();
     private SharedPreferences sharedPreferences;
-
+    private NotificationHelper notificationHelper;
     @Override
     public void onReceive(final Context context, final Intent intent) {
         Log.w("PassiveLocalisationUpdatesReceiver!", "updating Service!");
         schedulerFactory = new ScheduledLocalisationExecutor(context);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-
+        notificationHelper = new NotificationHelper(context);
         MyBestLocation.LocationResult locationResult = new MyBestLocation.LocationResult() {
             @Override
             public void gotLocation(Location location) {
@@ -40,7 +40,7 @@ public class LocalisationUpdatesReceiver extends BroadcastReceiver {
                         proximityUtil.updateLastClosestData();
                         schedulerFactory.setUpScheduledService(proximityUtil.getCurrentUpdateTime());
                         if (proximityUtil.shouldFireNotification())
-                            handleNotification(context, intent);
+                            notificationHelper.handleNotification(context, intent,proximityUtil);
                     } else
                         throw new Exception("Sth is wrong there was no localisation");
                 } catch (DbxException e) {
@@ -59,12 +59,5 @@ public class LocalisationUpdatesReceiver extends BroadcastReceiver {
 
     }
 
-    private void handleNotification(Context context, Intent intent) throws DbxException {
-        NotificationHelper notificationHandler = new NotificationHelper();
-        Bundle bundle = intent.getExtras();
-        if (proximityUtil.isEntering())
-            bundle.putString(TaskOpenHelper.ID, sharedPreferences.getString(proximityUtil.LAST_MIN_DIST_TASK_ID, ""));
-        notificationHandler.runNotification(context, intent);
 
-    }
 }

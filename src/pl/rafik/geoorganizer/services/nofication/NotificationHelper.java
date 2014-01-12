@@ -22,6 +22,7 @@ import pl.rafik.geoorganizer.model.dto.TaskDTO;
 import pl.rafik.geoorganizer.model.entity.TaskOpenHelper;
 import pl.rafik.geoorganizer.services.ITaskService;
 import pl.rafik.geoorganizer.services.data.TaskService;
+import pl.rafik.geoorganizer.services.proximity.ProximityUtil;
 
 /**
  * rafik991@gmail.com
@@ -29,9 +30,9 @@ import pl.rafik.geoorganizer.services.data.TaskService;
  */
 public class NotificationHelper {
     private static final int NOTIFICATION_ID = 1000;
+    private final String ENTERING_KEY = LocationManager.KEY_PROXIMITY_ENTERING;
     private Boolean sound;
     private String soundUri;
-    private String key = LocationManager.KEY_PROXIMITY_ENTERING;
     private ITaskService taskService;
     private Vibrator vibrator;
     private String[] vmodel;
@@ -46,12 +47,18 @@ public class NotificationHelper {
     private CharSequence tickerText;
     private Notification notification;
 
+    public NotificationHelper(Context context) {
+        sharedPreferences = PreferenceManager
+                .getDefaultSharedPreferences(context);
+    }
+
     public void runNotification(Context context, Intent intent) {
+
         boolean sound = initialiseVibration(context);
         notificationManager = (NotificationManager) context
                 .getSystemService(Context.NOTIFICATION_SERVICE);
         loadTask(context, intent);
-        entering = intent.getBooleanExtra(key, false);
+        entering = intent.getBooleanExtra(ENTERING_KEY, false);
         vibrationRepeat(context);
         handleNotification(context, entering, sound);
     }
@@ -61,12 +68,12 @@ public class NotificationHelper {
         CharSequence contentText = "";
         CharSequence contentTitle = "";
         if (entering) {
-            contentTitle = "Zblizasz sie do: ";
+            contentTitle = context.getString(R.string.notification_closed_to);
             Log.d(getClass().getSimpleName(), "entering");
             contentText = dto.getNote();
 
         } else {
-            contentTitle = "Oddalasz sie od: ";
+            contentTitle = context.getString(R.string.notification_getting_away);
             contentText = dto.getNote();
             Log.d(getClass().getSimpleName(), "exiting");
         }
@@ -118,12 +125,21 @@ public class NotificationHelper {
     }
 
     private boolean initialiseVibration(Context context) {
-        sharedPreferences = PreferenceManager
-                .getDefaultSharedPreferences(context);
+
         vmodel = sharedPreferences.getString(GeoOrganizerPreferences.VIBRATION_VALUE, "200,200").split(",");
         repeat = sharedPreferences.getString(GeoOrganizerPreferences.VIBRATION_REPEAT, "2");
         soundUri = sharedPreferences.getString(GeoOrganizerPreferences.CHOSEN_SOUND, "");
         return sound = sharedPreferences.getBoolean(GeoOrganizerPreferences.SOUND_PREF_CHECK, false);
+    }
+
+    public void handleNotification(Context context, Intent intent, ProximityUtil proximityUtil) throws DbxException {
+        Bundle bundle = intent.getExtras();
+        if (proximityUtil.isEntering())
+            intent.putExtra(ENTERING_KEY, true);
+        intent.putExtra(TaskOpenHelper.ID, sharedPreferences.getString(proximityUtil.LAST_MIN_DIST_TASK_ID, ""));
+
+        runNotification(context, intent);
+
     }
 
 }

@@ -5,11 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
-import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import com.dropbox.sync.android.DbxException;
-import pl.rafik.geoorganizer.model.entity.TaskOpenHelper;
 import pl.rafik.geoorganizer.services.localisation.LastLocalisation;
 import pl.rafik.geoorganizer.services.localisation.MyBestLocation;
 import pl.rafik.geoorganizer.services.nofication.NotificationHelper;
@@ -17,16 +15,15 @@ import pl.rafik.geoorganizer.services.proximity.ProximityUtil;
 import pl.rafik.geoorganizer.services.proximity.ScheduledLocalisationExecutor;
 
 /**
- *
  * rafik991@gmail.com
  * 1/10/14
  */
 public class PassiveLocalisationUpdatesReceiver extends BroadcastReceiver {
     private ProximityUtil proximityUtil;
     private ScheduledLocalisationExecutor schedulerFactory;
-    private MyBestLocation myBestLocation = new MyBestLocation();
     private SharedPreferences sharedPreferences;
     private LastLocalisation lastLocalisation;
+    private NotificationHelper notificationHelper;
 
     @Override
     public void onReceive(final Context context, final Intent intent) {
@@ -34,7 +31,7 @@ public class PassiveLocalisationUpdatesReceiver extends BroadcastReceiver {
         schedulerFactory = new ScheduledLocalisationExecutor(context);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         lastLocalisation = new LastLocalisation(context);
-
+        notificationHelper = new NotificationHelper(context);
         try {
             final Location lastBestLocation = lastLocalisation.getLastBestLocation();
             if (lastBestLocation != null) {
@@ -42,7 +39,7 @@ public class PassiveLocalisationUpdatesReceiver extends BroadcastReceiver {
                 proximityUtil.updateLastClosestData();
                 schedulerFactory.setUpScheduledService(proximityUtil.getCurrentUpdateTime());
                 if (proximityUtil.shouldFireNotification())
-                    handleNotification(context, intent);
+                    notificationHelper.handleNotification(context, intent, proximityUtil);
             } else {
                 throw new Exception("Localisation not found!");
             }
@@ -57,12 +54,5 @@ public class PassiveLocalisationUpdatesReceiver extends BroadcastReceiver {
 
     }
 
-    private void handleNotification(Context context, Intent intent) throws DbxException {
-        NotificationHelper notificationHandler = new NotificationHelper();
-        Bundle bundle = intent.getExtras();
-        if (proximityUtil.isEntering())
-            bundle.putString(TaskOpenHelper.ID, sharedPreferences.getString(proximityUtil.LAST_MIN_DIST_TASK_ID, ""));
-        notificationHandler.runNotification(context, intent);
 
-    }
 }

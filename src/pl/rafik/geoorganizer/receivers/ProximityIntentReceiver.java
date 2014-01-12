@@ -13,11 +13,12 @@ import pl.rafik.geoorganizer.services.nofication.NotificationHelper;
 public class ProximityIntentReceiver extends BroadcastReceiver {
 
 
-    private NotificationHelper notificationHandler = new NotificationHelper();
+    private NotificationHelper notificationHandler;
+
     @SuppressWarnings("deprecation")
     @Override
     public void onReceive(Context context, Intent intent) {
-
+        notificationHandler = new NotificationHelper(context);
         notificationHandler.runNotification(context, intent);
     }
 

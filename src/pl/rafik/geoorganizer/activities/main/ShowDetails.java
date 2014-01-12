@@ -12,8 +12,10 @@ import android.view.View.OnClickListener;
 import android.widget.*;
 import com.dropbox.sync.android.DbxException;
 import pl.rafik.geoorganizer.R;
+import pl.rafik.geoorganizer.activities.dbx.DbxStart;
 import pl.rafik.geoorganizer.activities.map.ShowListOnMap;
 import pl.rafik.geoorganizer.model.dto.TaskDTO;
+import pl.rafik.geoorganizer.model.entity.TaskOpenHelper;
 import pl.rafik.geoorganizer.services.ITaskService;
 import pl.rafik.geoorganizer.services.data.TaskService;
 
@@ -22,13 +24,20 @@ import java.util.Calendar;
 public class ShowDetails extends Activity {
     private ITaskService taskService;
     private FragmentManager fragmentManager;
+    private DbxStart dbxStart;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.custom_dialog);
+        initialiseDbx();
         initialiseServices();
         initialiseDetails();
 
+    }
+
+    private void initialiseDbx() {
+        dbxStart = new DbxStart();
+        dbxStart.initialiseDbx(this.getApplicationContext());
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -42,7 +51,7 @@ public class ShowDetails extends Activity {
         TaskDTO dto1 = null;
         try {
             dto1 = taskService.getTask(this.getIntent().getExtras()
-                    .getString("id"));
+                    .getString(TaskOpenHelper.ID));
         } catch (DbxException e) {
             e.printStackTrace();
         }

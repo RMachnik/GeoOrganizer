@@ -38,7 +38,8 @@
     <string name="set_proxi_Title">Ustaw Zasięg Powiadomień</string>
     <string name="help_txt">Aplikacja pozwalająca na dodawanie zadań przyporządkowanych do miejsca ich wykonania. Zadania te posiadają również czas ważności do którego czasu przypomnienie będzie aktywne.
         funkcja przypominająca będzie uruchamiała się w pobliżu miejsca dodania. Zakres przypomnień tzn promień obszaru objętego przypomnieniem można ustawić w ustawieniach aplikacji.
-        Forma przypomnienia również jest ustawiana w aplikacji. Uwagi odnośnie działania apliacji proszę kierować na email: </string>
+        Forma przypomnienia również jest ustawiana w aplikacji. Uwagi odnośnie działania apliacji proszę kierować na email:
+    </string>
     <string name="tv_email">rafik991@gmail.com</string>
     <string name="alerts_desc_cat">USTAWIENIA WIBRACJI</string>
     <string name="vibration_variants">Metody powiadamiania wibracyjnego</string>
@@ -56,7 +57,7 @@
     <string name="sound_choice_summary">Lista dostępnych dźwięków powiadomienia</string>
     <string name="show_on_map">Pokaż na mapie</string>
     <string name="mn_allTasks">Wszystkie zadania</string>
-    <string name="DROPBOX_APP_KEY" >wzid3rxyqgf9tfl</string>
+    <string name="DROPBOX_APP_KEY">wzid3rxyqgf9tfl</string>
     <string name="DROPBOX_SECRET_KEY">3z7d6lazq72onze</string>
     <string name="link_button">Link to dropbox</string>
     <string name="error_localisationName">Prosze wprowadzic poprawna lokalizacje!</string>
@@ -68,6 +69,7 @@
     <string name="toast_waiting">Czekam na lokalizacje...</string>
     <string name="toast_editionSuccess">Edycja udana.</string>
     <string name="toast_editionFailed">Edycja nieudana!</string>
-
+    <string name="notification_closed_to">Zblizasz sie do:</string>
+    <string name="notification_getting_away">Oddalasz sie od:</string>
 
 </resources>

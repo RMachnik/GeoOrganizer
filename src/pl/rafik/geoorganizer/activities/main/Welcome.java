@@ -12,8 +12,10 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import pl.rafik.geoorganizer.R;
-import pl.rafik.geoorganizer.activities.preferences.RunPreferences;
 import pl.rafik.geoorganizer.activities.dbx.DbxStart;
+import pl.rafik.geoorganizer.activities.preferences.RunPreferences;
+import pl.rafik.geoorganizer.services.proximity.ProximityUtil;
+import pl.rafik.geoorganizer.services.proximity.ScheduledLocalisationExecutor;
 
 /**
  * Klasa aktywnosci poczatkowej dla aplikacji.
@@ -31,6 +33,7 @@ public class Welcome extends Activity {
     private Builder alert;
     private LocationManager lm;
     private int one = 0;
+    private ScheduledLocalisationExecutor scheduledLocalisationExecutor;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -39,6 +42,8 @@ public class Welcome extends Activity {
         initialiseDbx();
         initialysiseButtons();
         checkDbxLinkedAccount();
+        scheduledLocalisationExecutor = new ScheduledLocalisationExecutor(this);
+        scheduledLocalisationExecutor.setUpScheduledService(ProximityUtil.DEFAULT_UPDATE_TIME);
 
     }
 
