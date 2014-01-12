@@ -7,7 +7,6 @@ import android.location.LocationManager;
 import android.os.Bundle;
 
 import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -22,7 +21,6 @@ import java.util.concurrent.TimeUnit;
  */
 
 public class MyBestLocation {
-
     LocationListener locationListenerGps = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
@@ -111,7 +109,6 @@ public class MyBestLocation {
         // providerow zdola to zrobic
         scheduler = Executors.newSingleThreadScheduledExecutor();
         scheduledFuture = scheduler.schedule(new GetLastLocation(), DELAY, TimeUnit.SECONDS);
-
         return true;
     }
 
@@ -126,9 +123,11 @@ public class MyBestLocation {
      *
      * @author rafal.machnik
      */
-    class GetLastLocation extends TimerTask {
+    class GetLastLocation extends Thread {
         @Override
         public void run() {
+
+            //todo porawic looper
             lm.removeUpdates(locationListenerGps);
             lm.removeUpdates(locationListenerNetwork);
 
@@ -145,19 +144,23 @@ public class MyBestLocation {
                     locationResult.gotLocation(gps_loc);
                 else
                     locationResult.gotLocation(net_loc);
+
                 return;
             }
 
             if (gps_loc != null) {
                 locationResult.gotLocation(gps_loc);
+
                 return;
             }
             if (net_loc != null) {
                 locationResult.gotLocation(net_loc);
+
                 return;
             }
 //			locationResult.gotLocation(null);
         }
+
     }
 
 }
