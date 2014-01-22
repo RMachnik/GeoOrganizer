@@ -7,6 +7,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 
 import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -100,15 +101,15 @@ public class MyBestLocation {
             lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0,
                     locationListenerNetwork);
         //----------------------
-        //async executor method upgrade
-        //timer1 = new Timer();
-        // timer1.schedule(new GetLastLocation(), DELAY);
-        //----------------
+       // async executor method upgrade
+        timer1 = new Timer();
+        timer1.schedule(new GetLastLocation(), DELAY*2000);
+       // ----------------
 
         // opozniam uruchomienie watku w celu odszukania lokacji jesli ktorys z
         // providerow zdola to zrobic
-        scheduler = Executors.newSingleThreadScheduledExecutor();
-        scheduledFuture = scheduler.schedule(new GetLastLocation(), DELAY, TimeUnit.SECONDS);
+       /* scheduler = Executors.newSingleThreadScheduledExecutor();
+        scheduler.schedule(new GetLastLocation(), DELAY, TimeUnit.SECONDS);*/
         return true;
     }
 
@@ -123,11 +124,11 @@ public class MyBestLocation {
      *
      * @author rafal.machnik
      */
-    class GetLastLocation extends Thread {
+    class GetLastLocation extends TimerTask {
         @Override
         public void run() {
 
-            //todo porawic looper
+
             lm.removeUpdates(locationListenerGps);
             lm.removeUpdates(locationListenerNetwork);
 

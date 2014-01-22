@@ -39,7 +39,7 @@ public class DbxStart extends Activity {
         });
     }
 
-    public DbxDatastore getOpenedDatastore() {
+    public DbxDatastore getOpenedDataStore() {
         if (dbxDatastore == null) {
             try {
                 dbxDatastore = DbxDatastore.openDefault(DbxStart.dbxAccountManager.getLinkedAccount());

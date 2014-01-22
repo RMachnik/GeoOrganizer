@@ -25,6 +25,7 @@ import pl.rafik.geoorganizer.services.proximity.ScheduledLocalisationExecutor;
 public class Welcome extends Activity {
 
     public final static int NEWTASK = 2;
+    private final int INITIALISE_DBX = 3;
     private Button btn;
     private Button btnTaskList;
     private Button help;
@@ -42,8 +43,7 @@ public class Welcome extends Activity {
         initialiseDbx();
         initialysiseButtons();
         checkDbxLinkedAccount();
-        scheduledLocalisationExecutor = new ScheduledLocalisationExecutor(this);
-        scheduledLocalisationExecutor.setUpScheduledService(ProximityUtil.DEFAULT_UPDATE_TIME);
+
 
     }
 
@@ -151,7 +151,10 @@ public class Welcome extends Activity {
         if (!DbxStart.dbxAccountManager.hasLinkedAccount()) {
             // Hide the add-task UI and show the link button
             Intent listIntent = new Intent(Welcome.this, DbxStart.class);
-            startActivityForResult(listIntent, 3);
+            startActivityForResult(listIntent, INITIALISE_DBX);
+        } else {
+            scheduledLocalisationExecutor = new ScheduledLocalisationExecutor(this);
+            scheduledLocalisationExecutor.setUpScheduledService(ProximityUtil.DEFAULT_UPDATE_TIME);
         }
     }
 
@@ -164,6 +167,10 @@ public class Welcome extends Activity {
             Intent listIntent = new Intent(Welcome.this, TaskList.class);
             startActivityForResult(listIntent, -1);
         } else {
+            if (resultCode == INITIALISE_DBX) {
+                scheduledLocalisationExecutor = new ScheduledLocalisationExecutor(this);
+                scheduledLocalisationExecutor.setUpScheduledService(ProximityUtil.DEFAULT_UPDATE_TIME);
+            }
             if (one == 0) {
                 Intent createTask = new Intent(Welcome.this, NewTask.class);
                 one = 1;

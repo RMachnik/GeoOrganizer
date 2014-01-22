@@ -24,7 +24,7 @@ public class DbxTaskDAO implements ITaskDAO {
 
     public DbxTaskDAO(Context context) {
         DbxStart dbxStart = new DbxStart();
-        mDatastore = dbxStart.getOpenedDatastore();
+        mDatastore = dbxStart.getOpenedDataStore();
         mTable = mDatastore.getTable(TABLE_NAME);
 
     }

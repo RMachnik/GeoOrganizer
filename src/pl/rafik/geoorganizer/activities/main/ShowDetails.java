@@ -3,9 +3,12 @@ package pl.rafik.geoorganizer.activities.main;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.*;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -18,13 +21,16 @@ import pl.rafik.geoorganizer.model.dto.TaskDTO;
 import pl.rafik.geoorganizer.model.entity.TaskOpenHelper;
 import pl.rafik.geoorganizer.services.ITaskService;
 import pl.rafik.geoorganizer.services.data.TaskService;
+import pl.rafik.geoorganizer.services.proximity.ScheduledLocalisationExecutor;
 
 import java.util.Calendar;
+import java.util.concurrent.ScheduledExecutorService;
 
 public class ShowDetails extends Activity {
     private ITaskService taskService;
     private FragmentManager fragmentManager;
     private DbxStart dbxStart;
+    private SharedPreferences sharedPreferences;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,7 +38,15 @@ public class ShowDetails extends Activity {
         initialiseDbx();
         initialiseServices();
         initialiseDetails();
+        stopNotifications(this.getApplicationContext());
+    }
 
+    private void stopNotifications(Context context) {
+        sharedPreferences = PreferenceManager
+                .getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(ScheduledLocalisationExecutor.STOP_SCHEDULED_UPDATES,true);
+        editor.commit();
     }
 
     private void initialiseDbx() {

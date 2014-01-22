@@ -16,6 +16,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import pl.rafik.geoorganizer.R;
+import pl.rafik.geoorganizer.activities.main.NewTask;
 import pl.rafik.geoorganizer.handlers.RefreshHandlerMapSearch;
 import pl.rafik.geoorganizer.services.localisation.LocalisationService;
 import pl.rafik.geoorganizer.util.MapUtil;
@@ -27,7 +28,7 @@ import pl.rafik.geoorganizer.util.MapUtil;
  * @author Rafal
  */
 public class ShowOnMap extends FragmentActivity {
-
+    public final String placeName = NewTask.PLACE_NAME;
     private double latitude;
     private double longitude;
     private LatLng point;
@@ -82,6 +83,7 @@ public class ShowOnMap extends FragmentActivity {
                 // kiedy w polu wyszukiwania jest tekst ktory nie zostal jeszcze
                 // odnaleziony, tzn funkcja wyszukiwania lokalizacji nie zostala
                 // odpalona
+
                 if (!getAddr().contains(getSearchEdt().getText().toString())) {
                     getService().getAddresFromName(getSearchEdt().getText().toString());
                 } else if (getSearchEdt().getText().toString().isEmpty()
@@ -94,14 +96,14 @@ public class ShowOnMap extends FragmentActivity {
                 } else if (getSearchEdt().getText().toString().isEmpty()
                         && !getAddr().isEmpty()) {
                     Intent data = ShowOnMap.this.getIntent();
-                    data.putExtra("PlaceName", getAddr());
+                    data.putExtra(placeName, getAddr());
                     data.putExtra("Latitude", getLatitude());
                     data.putExtra("Longitude", getLongitude());
                     setResult(RESULT_OK, data);
                     finish();
                 }
                 Intent data = ShowOnMap.this.getIntent();
-                data.putExtra("PlaceName", getSearchEdt().getText().toString());
+                data.putExtra(placeName, getSearchEdt().getText().toString());
                 data.putExtra("Latitude", getLatitude());
                 data.putExtra("Longitude", getLongitude());
                 setResult(RESULT_OK, data);
@@ -121,6 +123,7 @@ public class ShowOnMap extends FragmentActivity {
         Log.d("Latitude", String.valueOf(getLatitude()));
         Log.d("Longitude", String.valueOf(getLongitude()));
         point = new LatLng(getLatitude(), getLongitude());
+        setAddr(bundle.getString(placeName));
         getSearchEdt().setText(getAddr());
     }
 

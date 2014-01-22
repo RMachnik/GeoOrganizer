@@ -43,6 +43,7 @@ import java.util.Calendar;
  */
 public class NewTask extends Activity implements AddEditTaskI {
 
+    public static final String PLACE_NAME = "PlaceName";
     private Button findMap;
     private Button save;
     private LocalisationService service = null;
@@ -131,12 +132,14 @@ public class NewTask extends Activity implements AddEditTaskI {
                         @Override
                         public void gotLocation(Location location) {
                             if (location != null) {
+
                                 Intent mapIntent = new Intent(NewTask.this,
                                         ShowOnMap.class);
                                 mapIntent.putExtra("Latitude",
                                         location.getLatitude());
                                 mapIntent.putExtra("Longitude",
                                         location.getLongitude());
+                                getService1().getAdress(location.getLatitude(),location.getLongitude());
                                 mapIntent.putExtra("Desc", getAddr());
                                 mapIntent.putExtra("Titile", taskName.getText());
                                 NewTask.this.startActivityForResult(mapIntent,
@@ -271,8 +274,9 @@ public class NewTask extends Activity implements AddEditTaskI {
 
         if (resultCode == RESULT_OK) {
 
-            Log.d("PlaceName", data.getStringExtra("PlaceName"));
-            placeName.setText(data.getStringExtra("PlaceName"));
+
+            Log.d(PLACE_NAME, data.getStringExtra(PLACE_NAME));
+            placeName.setText(data.getStringExtra(PLACE_NAME));
 
         }
 
